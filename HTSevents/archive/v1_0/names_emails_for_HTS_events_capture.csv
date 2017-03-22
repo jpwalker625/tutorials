@@ -1,0 +1,21 @@
+name_id,first,last,email,score,is_disabled
+0,Adam,Navidi,navidi@amyris.com,1,0
+1,Ben,Kaufmann,kaufmann@amyris.com,1,0
+2,Beth ,Carroll,carroll@amyris.com,1,0
+3,Diana,Herrera,herrera@amyris.com,1,0
+4,Getahun,Hailu,hailu@amyris.com,1,0
+5,Heather,DePaul,depaul@amyris.com,1,0
+6,Jabus,Tyerman,tyerman@amyris.com,2,0
+7,Jennifer,Lau,lau@amyris.com,1,0
+8,Jericho,Pantaleon,pantaleon@amyris.com,1,0
+9,Joseph,Walker,jwalker@amyris.com,1,0
+10,Lawrence,Chao,chao@amyris.com,1,0
+11,Lucas,Frenz,frenz@amyris.com,1,0
+12,Melinda,Yu,yu@amyris.com,1,0
+13,Ninez,Gagelonia,gagelonia@amyris.com,1,0
+14,Rachae,Perkins,perkins@amyris.com,1,0
+15,Rodrigo,Gonzalez,gonzalez@amyris.com,1,0
+16,guest, ,,0,0
+17,automation, ,,0,0
+18,hts, ,,0,0
+19,lab_services,,,0,0

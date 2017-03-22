@@ -1,0 +1,31 @@
+library(shiny)
+
+# Define UI for miles per gallon application
+shinyUI(pageWithSidebar(
+
+  # Application title
+  headerPanel("HTS Event Capture"),
+
+  sidebarPanel(
+  helpText("Enter event information below:"),
+ numericInput("obs", "Number of table rows to view:", 5),
+  submitButton("Submit")
+
+
+  #  selectInput("name", "Name:", list("Jabus", "Ben", "Adam", "Amoolya", "Simon", "Tom", "misc")),
+  #  textInput("event_description", "Event description", "stuff happens..."),
+  #  textInput("tags", "Tags", "HTSevent"),
+  #  numericInput("obs", "Number of table rows to view:", 10),
+  #  submitButton("Submit"),
+#  helpText("", "Exit the moo moo"),
+ 
+),
+
+  mainPanel(
+   tabsetPanel(
+     tabPanel("Recent events", tableOutput("showEvents"))
+    )
+  )
+)
+)
+

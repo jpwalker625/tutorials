@@ -1,0 +1,38 @@
+library(shiny)
+library(amyRis)
+source("/var/shiny-server/www/HTSevents/hts_functions.R")
+event <- list(
+  time_stamp <- as.character(Sys.time()), 
+  person <- c("Jabus"),
+  event_description <- c("build testing"),
+  tags <- c("justatest"),
+  is_disabled <- 0
+)
+
+
+########### 
+shinyServer(function(input, output) {
+ 
+datasetInput <- reactive({
+  sql <- c("select * from [dataout].[easybake].[hts_et_meta_events] order by time_stamp DESC")
+  pull(sql)
+})
+
+addEvent <- reactive({
+  sql <- paste("INSERT INTO easybake.hts_et_meta_events VALUES ('", paste(event, collapse="','"), "')", sep="")
+  pull(sql)
+})
+
+
+
+output$showEvents <- renderTable({
+  
+  x <- datasetInput()
+  x$time_stamp <- as.character(x$time_stamp)
+  head(x, n=input$obs)
+
+})
+
+})  
+
+

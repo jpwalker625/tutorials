@@ -1,0 +1,25 @@
+## SERVER
+
+library(shiny)
+library(amyRis)
+source("/var/shiny-server/www/HTSevents/hts_functions.R")
+
+
+########### 
+shinyServer(function(input, output) {
+ 
+datasetInput <- reactive({
+  sql <- c("select * from [dataout].[easybake].[hts_et_meta_events] order by time_stamp DESC")
+  pull(sql)
+})
+
+
+output$showEvents <- renderDataTable({
+  x <- datasetInput()
+  x$time_stamp <- as.character(x$time_stamp)
+  x
+})
+
+})  
+
+

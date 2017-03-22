@@ -1,0 +1,30 @@
+failure_mode_id,failure_mode_description,date_failure_mode_defined,date_failure_mode_end,is_disabled
+0,Failure,2014-01-21,,0
+1,Testing,2014-01-21,,0
+2,Illdefined,2014-01-21,,0
+3,Defined,2014-01-21,,0
+4,Equipment,2014-01-21,,0
+5,Machine,2014-01-21,,0
+6,Material,2014-01-21,,0
+7,Raw,2014-01-21,,0
+8,Media,2014-01-21,,0
+9,Contaminated,2014-01-21,,0
+10,Volume,2014-01-21,,0
+11,Components,2014-01-21,,0
+12,Experimental-scope,2014-01-21,,0
+13,Plate-group or library,2014-01-21,,0
+14,Plate,2014-01-21,,0
+15,Well,2014-01-21,,0
+16,Strain,2014-01-21,,0
+17,Well-type,2014-01-21,,0
+18,Information,2014-01-21,,0
+19,Measurement,2014-01-21,,0
+20,Analysis,2014-01-21,,0
+21,Analysis-ill-defined,2014-01-21,,0
+22,Not-captured,2014-01-21,,0
+23,Biocell calibration value,2014-01-21,,0
+24,Personnel,2014-01-21,,0
+25,Operator,2014-01-21,,0
+26,Scheduling,2014-01-21,,0
+27,Safety-erg,2014-01-21,,0
+28,Process,2014-01-21,,0

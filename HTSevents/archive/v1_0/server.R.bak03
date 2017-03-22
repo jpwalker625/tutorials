@@ -1,0 +1,64 @@
+## SERVER
+
+library(shiny)
+library(amyRis)
+source("/var/shiny-server/www/HTSevents/hts_functions.R")
+
+
+########### 
+shinyServer(function(input, output) {
+
+values <- reactiveValues()
+values$lastAction <- NULL
+
+observe({
+  if (input$submit !=0) {
+    values$lastAction = 'pushToDB'
+  }
+})
+
+datasetInput <- reactive({
+  sql <- c("select TOP 10 * from [dataout].[easybake].[hts_et_meta_events] order by time_stamp DESC")
+  pull(sql)
+})
+
+dataToPush <- reactive({
+event <- list(
+  time_stamp = as.character(Sys.time()), 
+  person = input$name,
+  event_description = input$event_desc,
+  tags = input$tags,
+  is_disabled = 0
+)
+
+  sql2 <- paste("INSERT INTO easybake.hts_et_meta_events VALUES ('", paste(event, collapse="','"), "')", sep="")
+  pull(sql2)
+  values$lastAction <- NULL
+})
+
+
+output$showEvents <- renderDataTable({
+  if (is.null(values$lastAction)) {
+     x <- datasetInput()
+     x$time_stamp <- as.character(x$time_stamp)
+     x
+     return(NULL)
+  }
+
+  else {
+    dataToPush()
+    x <- datasetInput()
+    x$time_stamp <- as.character(x$time_stamp)
+    x
+  } 
+})
+
+})
+
+
+
+#extra
+#  sql <- paste("INSERT INTO easybake.hts_et_meta_events VALUES ('", paste(event, collapse="','"), "')", sep="")
+#  pull(sql)
+#}
+
