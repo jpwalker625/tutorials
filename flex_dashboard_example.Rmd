@@ -1,0 +1,24 @@
+---
+title: "Untitled"
+author: "Joseph Walker"
+date: "3/22/2017"
+output: flexdashboard::flex_dashboard
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(flexdashboard)
+knitr::opts_chunk$set(echo = T, warning = F, message = F)
+```
+
+###1st plot
+```{r plot 1}
+ggplot(diamonds, aes(carat, cut)) +
+  geom_point()
+```
+
+###2nd plot
+```{r plot 2}
+ggplot(diamonds, aes(carat, cut)) +
+  geom_point()
+```
