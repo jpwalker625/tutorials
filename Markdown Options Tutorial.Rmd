@@ -1,0 +1,68 @@
+---
+title: "markdown documentation tutorial"
+author: "Joseph Walker"
+date: "3/29/2017"
+output: 
+  html_document: 
+    highlight: espresso
+    theme: flatly
+    toc: yes
+    toc_float: TRUE
+---
+
+```{r chunk options, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(forcats)
+
+```
+
+## I also want to reference some really cool options found in the normal markdown settings
+
+You can create tabbed sections like this:
+
+## mtcars dataset {.tabset .tabset-fade .tabset-pills}
+
+This is the mtcars dataset
+
+### The Data
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+kable(mtcars,
+             align = 'c', 
+             caption = 'The MTCARS Data Set')
+```
+
+### Visualizations  {.tabset}
+
+You can even layer tabs within tabs!
+
+#### Inner Tab 1
+
+Whoooa!
+
+```{r}
+mtcars <- mtcars %>% mutate(model = row.names(mtcars))
+mtcars$model <- factor(mtcars$model)
+
+mtcars %>% ggplot(aes(x = mpg, y = fct_reorder(model, mpg))) +
+  geom_point()
+```
+
+#### Innter Tab 2
+
+So COOL!
+
+```{r, echo = FALSE}
+mtcars$gear <- factor(mtcars$gear)
+
+mtcars %>% 
+  ggplot(aes(x = gear, y = mpg, fill = gear)) +
+  geom_boxplot()+
+  ggtitle(label = 'Mileage by Gear Number') +
+  labs( x = 'Gears', y = 'Mileage per Gallon')
+```
+
