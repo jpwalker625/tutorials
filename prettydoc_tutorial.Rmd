@@ -1,0 +1,38 @@
+---
+title: "pretty doc tutorial"
+author: "Joseph Walker"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    toc: yes
+    theme: tactile
+    highlight: github
+---
+
+
+
+## Introduction
+
+ Here is an example of my really cool markdown file using `pretty doc` elements
+
+To start, I'm using:
+
+```output:
+      prettydoc::html_pretty:
+        toc: yes
+        theme: tactile
+        highlight: github
+```
+
+Other options for themes include: `archtiect, cayman, hpstr, and leonids`
+The other possible highlight option is: `vignette`
+
+For more info, check out this site:
+
+`html_pretty` in the [**prettydoc**](http://github.com/yixuan/prettydoc/)
+package is a new output format for creating HTML document from R Markdown files.
+`html_pretty` is more lightweight compared to `html_document`, and is more
+stylish than `html_vignette` when creating package vignettes.
+
+
+
