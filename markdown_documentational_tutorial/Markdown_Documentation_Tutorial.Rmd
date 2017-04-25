@@ -1,0 +1,126 @@
+---
+title: "R Markdown Documentation Tutorial"
+author: "Joseph Walker"
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    highlight: espresso
+    theme: readable
+    toc: yes
+    toc_float: yes
+---
+```{r chunk options, echo = FALSE, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(forcats)
+
+```
+# Introduction  
+R Markdown is a powerful tool for creating reports. It gives the user the flexibility to include as much, or as little data/information/ouput as he/she sees fit. Right out of the box, it is easy to use and fits most needs. However, there are many more useful features that will allow you to take your files to the next level.
+
+# Front-Matter
+Let's begin with the *front-matter*, the section at the beginning of the document where you specify the following criteria:  
+
+title: "R Markdown Documentation Tutorial"  
+author: "Joseph Walker"  
+date: "\'r Sys.Date()\`"  
+output:  
+  html_document:   
+    highlight: espresso  
+    theme: flatly  
+    toc: yes  
+    toc_float: TRUE
+
+There are different themes and options to include if one so chooses:
+
+**highlight**, **theme** & **toc (table of contents)** can be chose from the *output options* menu (click the wheel)
+
+ 
+![](C:/workspace/tutorials/markdown_documentational_tutorial/options1.jpg)
+![](C:/workspace/tutorials/markdown_documentational_tutorial/options2.jpg)
+
+This document uses the *readable* theme, and the *espresso* highlighting 
+
+The **toc_float** argument determines whether or not the table of contents will scroll along with the document (TRUE or YES) or be static at the head of the document (FALSE or NO).
+
+This document has the toc_float feature on. 
+I find it useful to turn the feature off to free up page space in instances when you have diagrams or plots.
+
+# How to Create Tabs
+
+Tabbed sections give your file a more organized format. Here's how to add tabs:  
+
+`# mtcars dataset {.tabset .tabset-fade .tabset-pills}`  
+`## The Data`  
+`## Visualizations {.tabset}`  
+`### Inner Tab 1`  
+`### Inner Tab 2`  
+
+Let's break it down section by section to get a better understanding of how this works.
+
+
+
+# mtcars dataset {.tabset .tabset-fade .tabset-pills}
+
+This is the mtcars dataset
+
+Any section you want to have tabs needs two things:   
+* A pound sign (or hash-tag for all the youngsters) in the section header:  `#`  
+* And the `{.tabset}` argument
+
+The header above is coded as: 
+`# mtcars dataset {.tabset .tabset-fade .tabset-pills}`
+
+There are three arguments you can pass:  
+
+1) .tabset - the default tabset 
+2) .tabset-fade - this allows the current tab to subtly fade out when you click the next tab 
+3) .tabset-pills - the tab will be filled with color, representing a 'pilled' style tab
+
+## The Data
+
+The tabbed section(s) need(s) to have one more `#` in the section header than the parent section it is contained within.
+
+The tab header above is coded as: `## The Data`
+
+There's no need to add the `{.tabset}` since you don't want any more tabs under this section.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+kable(mtcars,
+             align = 'c', 
+             caption = 'The MTCARS Data Set')
+```
+
+## Visualizations  {.tabset}
+
+However, we want this tab to have its own set of tabs so we code it like this: `## Visualizations {.tabset}`
+
+### Inner Tab 1
+
+And so the tab header needs 3 hashtags to denote it as a tab under the visualizations section: `### Inner Tab 1`
+
+```{r}
+mtcars <- mtcars %>% mutate(model = row.names(mtcars))
+mtcars$model <- factor(mtcars$model)
+
+mtcars %>% ggplot(aes(x = mpg, y = fct_reorder(model, mpg))) +
+  geom_point()
+```
+
+### Innter Tab 2
+
+Likewise, this tab is coded as: `### Inner Tab 2`
+
+```{r, echo = FALSE}
+mtcars$gear <- factor(mtcars$gear)
+
+mtcars %>% 
+  ggplot(aes(x = gear, y = mpg, fill = gear)) +
+  geom_boxplot()+
+  ggtitle(label = 'Mileage by Gear Number') +
+  labs( x = 'Gears', y = 'Mileage per Gallon')
+```
+
