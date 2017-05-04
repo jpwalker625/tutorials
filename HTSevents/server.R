@@ -28,7 +28,7 @@ version <- c("1.2.2")
 library(shiny)
 library(RODBC) #for DB connections
 
-source("/var/shiny-server/www/HTSevents/hts_functions.R")
+source("hts_functions.R")
 
 ########### 
 
