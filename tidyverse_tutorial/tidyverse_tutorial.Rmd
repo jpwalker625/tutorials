@@ -1,0 +1,186 @@
+---
+title: "An Introduction to the Tidyverse"
+author: "Joseph Walker"
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    highlight: pygments
+    theme: readable
+    toc: yes
+    toc_float: yes
+---
+
+Notes:: add the principles of a tidy data frame
+WTF is a tibble?
+Add helpful links and cheatsheets
+
+```{r setup, include=FALSE, warning = FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+
+First off, install the tidyverse:
+
+`install.packages("tidyverse")`
+
+Next, load it:
+
+```{r load tidyverse, warning = FALSE, message=TRUE}
+library(tidyverse)
+```
+
+It is important to note that only the **core** packages are loaded.  Other tidyverse packages need to be loaded explicitly.  We can see all packages that are part of the tidyverse with the following code:
+
+```{r all tidverse packages}
+tidyverse_packages(include_self = TRUE)
+```
+
+So where should we start?
+
+One of the key concepts in R for Data Science is understanding the model used to approach a data science project.  
+
+We can think about this model more broadly to fit the scope of any problem we have or data we seek to analyze:  
+
+![](model.png)  
+---
+
+So then, let's dive into the packages one by one as we follow along the model. But first, a few important things to know.
+
+**What the hell is a tibble?**
+
+
+
+# Import {.tabset .tabset-pills}
+
+In order to work with your data in R, you have to import it!
+
+
+## readr
+
+* Functions tend to be faster (~10x)
+* readr functions produce *tibbles* and don't convert character vectors to factors
+* reproducible: some base R functions inherit behavior from your OS and environment variables and may not work if you share with others
+
+Useful for reading and writing csv, tsv, tables, lines(of a file or string).
+
+```{r readr}
+
+write_csv(x = mtcars, path = "mtcars_data.csv") # writes to current working directory unless otherwise specified in the path argument
+
+read_csv(file = "mtcars_data.csv", col_names = TRUE)
+```
+
+---
+
+## readxl
+
+* Must be loaded explicitly  
+* Useful for .xls & .xlsx files  
+
+---
+
+## jsonlite
+
+* for pasing json files
+* `tidyjson` contains jsonlite functionality and is a useful package that uses 'tidy' principles for turning json data into useful tables.
+
+---
+
+## other types of data
+
+**Haven** for SPSS, Stata and SAS files  
+**xml2** for parsing xml  
+**rvest** for web scraping  
+
+---
+
+# Tidy & Transform {.tabset .tabset-pills}
+
+The bread and butter of data analysis involves tidying and transformation, often called data 'wrangling'.
+
+At the heart of R coding using tidy principles is the piping function **`%>%`**. This useful tools allows you to string together operations in an intuitive way. The piping operator was born from the magrittr package, self described in the vignette as:
+
+> The magrittr (to be pronounced with a sophisticated french accent) is a package with two aims: to decrease development time and to improve readability and maintainability of code. Or even shortr: to make your code smokin' (puff puff)!
+
+The pipe operator, along with many tidyverse functions uses Non-Standard Evaluation (NSE). This concept is essential to the core of R programming. All you need to know about it for now is that it dramatically reduces the amount of typing. 
+
+For more on NSE: https://cran.r-project.org/web/packages/dplyr/vignettes/nse.html
+
+
+
+## Syntax
+
+The following functions are basic, but essential for wrangling data.
+
+
+`tbl_df` makes it easier to take a look at a data frame. R displays only the info. that fits on the screen
+
+`glimpse` gives an information dense summary of the data (analagous to `str()`).
+
+`View` (with a capital V) allows you to view the data in a separate tab as a spreadsheet or excel like format  
+
+```{r basics}
+# tbl_df cleans it up
+tbl_df(mtcars)
+
+# densely summarizes the data
+glimpse(mtcars)
+```
+
+## Reshaping Data {.tabset .tabset-pills}
+
+`gather()` & `spread()` allow you to convert a data frame from wide to tall and vice-versa using a system of key-value pairing.
+
+In order for spread to work, each row must have a unique identifier (such as a row index). Otherwise, R won't know how to make proper key-value pair combos in relation to the rest of the variables in your data set.
+
+For the following examples:
+`devtools::install_github("garrettgman/DSR")`
+
+```{r load DSR}
+# data sets containing WHO documented cases of TB
+library(DSR)
+```
+---
+
+### gather
+```{r gather examples}
+# cases of TB for 3 countries occurring in 2 separate years 
+tbl_df(DSR::table4)
+
+gather(data = table4, key = year, value = cases, columns = 2:3) %>%
+  arrange(country)
+
+# population of 3 countries recorded in 2 separate years
+tbl_df(table5)
+
+table5 %>% 
+  gather(key = year, value = population, -country) %>%
+  arrange(desc(population))
+```
+
+### spread
+```{r spread examples}
+#population of 219 countries from 1995-2013
+glimpse(population)
+
+spread(data = population, key = year, value = population)
+```
+
+Here's an example where spread won't work
+
+```{r spread failure, error=TRUE}
+scores <- data_frame(id = c(1:6), 
+                     group_id = c(1211, 1311, 2634, 1311, 1211, 2634), 
+                     exam_1 = c(67, 77, 45, 92, 83, 70),
+                     exam_2 = c(85, 76, 69, 94, 88, 80),
+                     exam_3 = c(91, 94, 88, 79, 97, 100))
+
+gathered_scores <- scores %>% gather(exam, score, exam_1:exam_3)
+
+tbl_df(gathered_scores)
+
+gathered_scores %>%
+  select(-id) %>%
+  spread(key = exam, value = score) %>%
+  print()
+```
