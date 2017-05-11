@@ -9,33 +9,44 @@ output:
     toc: yes
     toc_float: yes
 ---
+# Introduction
 
-Notes:: add the principles of a tidy data frame
-WTF is a tibble?
-Add helpful links and cheatsheets
+Welcome to the tidyverse tutorial. The information below provides an introduction to the suite of packages contained in the tidyverse that are useful for programming in R. The tidyverse was created by Hadley Wickham, a prominent R developer and statistician. 
+
+Before we begin, here are some useful resources to learn more about R and the topics in this tutorial.
+
+The tidyverse site which contains detailed information about each package: http://tidyverse.org/
+
+The awesome *R for Data Science* book, free and in full: http://r4ds.had.co.nz/
+
+For quick references to useful packages and functions, go to Help --> Cheatsheets in the R studio menu bar. You can also find them here: https://www.rstudio.com/resources/cheatsheets/
+
 
 ```{r setup, include=FALSE, warning = FALSE, message = FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
-
-First off, install the tidyverse:
+Let's start by installing the tidyverse:
 
 `install.packages("tidyverse")`
 
-Next, load it:
+As with all packages, you have to load it before the functions are available to use:
 
 ```{r load tidyverse, warning = FALSE, message=TRUE}
 library(tidyverse)
 ```
 
-It is important to note that only the **core** packages are loaded.  Other tidyverse packages need to be loaded explicitly.  We can see all packages that are part of the tidyverse with the following code:
+It is important to note that only the **core** packages are loaded.  Other tidyverse packages need to be loaded explicitly.
+
+We can see all packages that are part of the tidyverse with the following code:
 
 ```{r all tidverse packages}
 tidyverse_packages(include_self = TRUE)
 ```
 
-So where should we start?
+## A Model for Data Analysis
+
+So where to start?
 
 One of the key concepts in R for Data Science is understanding the model used to approach a data science project.  
 
@@ -43,12 +54,7 @@ We can think about this model more broadly to fit the scope of any problem we ha
 
 ![](model.png)  
 ---
-
-So then, let's dive into the packages one by one as we follow along the model. But first, a few important things to know.
-
-**What the hell is a tibble?**
-
-
+So then, let's dive into the packages as we follow along the steps of our model.
 
 # Import {.tabset .tabset-pills}
 
@@ -57,8 +63,9 @@ In order to work with your data in R, you have to import it!
 
 ## readr
 
-* Functions tend to be faster (~10x)
-* readr functions produce *tibbles* and don't convert character vectors to factors
+
+* functions tend to be faster (~10x)
+* readr functions produce *tibbles* and don't convert character vectors to factors *(more on that later)*
 * reproducible: some base R functions inherit behavior from your OS and environment variables and may not work if you share with others
 
 Useful for reading and writing csv, tsv, tables, lines(of a file or string).
@@ -94,9 +101,32 @@ read_csv(file = "mtcars_data.csv", col_names = TRUE)
 
 ---
 
-# Tidy & Transform {.tabset .tabset-pills}
+# Data Wrangling
 
-The bread and butter of data analysis involves tidying and transformation, often called data 'wrangling'.
+The bread and butter of data analysis involves the next two steps of the model: tidying and transformation, often called **data wrangling**.
+
+## Tidy {.tabset .tabset-fade .tabset-pills #anchor}
+
+Packages in the tidyverse are designed to work together to incorporate *tidy* principles.
+
+There are three rules which make a dataset *tidy*:  
+
+* Each variable must have its own column 
+* Each observation must have its own row 
+* Each value must have its own cell 
+
+### Forcats
+
+
+---
+
+### Lubridate
+
+
+
+---
+
+### Magrittr
 
 At the heart of R coding using tidy principles is the piping function **`%>%`**. This useful tools allows you to string together operations in an intuitive way. The piping operator was born from the magrittr package, self described in the vignette as:
 
@@ -106,20 +136,48 @@ The pipe operator, along with many tidyverse functions uses Non-Standard Evaluat
 
 For more on NSE: https://cran.r-project.org/web/packages/dplyr/vignettes/nse.html
 
+---
+
+### Tibble
+
+A tibble is simply the tidyverse version of a dataframe. It is the strucutural foundation of your data. Tibbles maintain the elements of a dataframe that have stood the test of time and drop those which have proven to be frustrating.
+
+Tibbles: 
+* never change an input's type (strings aren't coerced to factors)
+* never adjusts the names of variables
+* never adds row.names (mtcars example)
+
+```{r tibble example}
+
+"assay value" <- c(2.3, 1.8, 2.1, .7, 1.6)
+"y number" <- c("Y29438", "Y22322", "Y27011", "Y16148", "Y21900") 
 
 
-## Syntax
+glimpse(data.frame(`assay value`, `y number`))
 
-The following functions are basic, but essential for wrangling data.
+glimpse(tibble(`assay value`, `y number`))
+glimpse(row.names(tibble(`assay value`, `y number`)))
 
+glimpse(row.names(mtcars))
+```
 
-`tbl_df` makes it easier to take a look at a data frame. R displays only the info. that fits on the screen
+---
+
+### Tidyr {.tabset .tabset-pills}
+
+**The tidyr package is useful for visualizing and reshaping data.**
+
+#### Syntax
+
+The following functions are basic but essential to the foundation of the tidyverse.
+
+`tbl_df` makes it easier to take a look at a data frame. R displays only the info. that fits on the screen. By default a tibble utilizes the tbl_df function.
 
 `glimpse` gives an information dense summary of the data (analagous to `str()`).
 
-`View` (with a capital V) allows you to view the data in a separate tab as a spreadsheet or excel like format  
+`View` (with a capital V) allows you to view the data in a separate tab as a spreadsheet or excel like format 
 
-```{r basics}
+```{r syntax}
 # tbl_df cleans it up
 tbl_df(mtcars)
 
@@ -127,11 +185,11 @@ tbl_df(mtcars)
 glimpse(mtcars)
 ```
 
-## Reshaping Data {.tabset .tabset-pills}
+---
+
+#### Reshaping Data {.tabset .tabet-fade .tabset-pills}
 
 `gather()` & `spread()` allow you to convert a data frame from wide to tall and vice-versa using a system of key-value pairing.
-
-In order for spread to work, each row must have a unique identifier (such as a row index). Otherwise, R won't know how to make proper key-value pair combos in relation to the rest of the variables in your data set.
 
 For the following examples:
 `devtools::install_github("garrettgman/DSR")`
@@ -140,9 +198,8 @@ For the following examples:
 # data sets containing WHO documented cases of TB
 library(DSR)
 ```
----
 
-### gather
+##### Gather
 ```{r gather examples}
 # cases of TB for 3 countries occurring in 2 separate years 
 tbl_df(DSR::table4)
@@ -157,8 +214,12 @@ table5 %>%
   gather(key = year, value = population, -country) %>%
   arrange(desc(population))
 ```
+---
 
-### spread
+##### Spread
+
+In order for spread to work, each row must have a unique identifier (such as a row index). Otherwise, R won't know how to make proper key-value pair combos in relation to the rest of the variables in your data set.
+
 ```{r spread examples}
 #population of 219 countries from 1995-2013
 glimpse(population)
@@ -184,3 +245,18 @@ gathered_scores %>%
   spread(key = exam, value = score) %>%
   print()
 ```
+---
+
+## Transform
+
+Once you have your data in the proper format, you probably want to perform some sort of analysis on it. This is where all the magic happens and dplyr is the package to do it.
+
+### Dplyr
+
+dplyr functions take on a SQL like approach to wrangling your data. In conjunction with the %>% (see [Magrittr](#anchor) for more details), R programming becomes much more efficient & intuitive.
+
+
+
+#STRINGR 
+
+#PURRRRRR
