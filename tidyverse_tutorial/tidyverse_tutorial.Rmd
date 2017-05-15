@@ -115,15 +115,155 @@ There are three rules which make a dataset *tidy*:
 * Each observation must have its own row 
 * Each value must have its own cell 
 
-### Forcats
+### Forcats {.tabset .tabset-fade .tabset-pills}
 
+If you've ever dealt with factors using base R, you know that it can be a challenge. Thankfully, the `forcats` package has a multitude of functions useful for handling factors efficiently.
+
+**We need to load the `forcats` package explicitly as it is not part of the core tidyverse packages.**
+
+```{r load forcats}
+library(forcats)
+```
+
+#### Factor Recode
+One useful function of `forcats` is `fct_recode`. This allows you to change the levels (or name/identity) of a factor. Here's an example:
+
+```{r change level values}
+#Let's use the airquality data set that comes pre-installed in R
+glimpse(airquality)
+
+#The month column is data type integer, let's change it to a factor 
+airquality$Month <- factor(airquality$Month)
+
+levels(airquality$Month)
+
+#Let's rename the months using the fct_recode function. 
+airquality$Month <- fct_recode(airquality$Month, May = '5', June = '6', July = '7', Aug = '8', Sept = '9')
+glimpse(airquality$Month)
+
+ggplot(airquality, aes(Month, Temp)) +
+  geom_boxplot(aes(fill = Month)) +
+  ggtitle(label = "Daily Temperatures Aggregated by Month")
+```
+
+---
+
+#### Factor Reverse
+If you just want to reverse the order, there's the `fct_rev` function. You can even use it in line when defining your aesthetics in ggplot like so:
+```{r reverse the order}
+
+ggplot(airquality, aes(fct_rev(Month), Temp)) +
+  geom_boxplot(aes(fill = Month)) +
+  labs(x = "Month") +
+  ggtitle(label = "Our plot now has the x-axis in reverse order")
+```
+
+---
+
+#### Factor Relevel
+
+Another useful function is `fct_relevel`. This function allows us to change any number of levels to any position.
+
+```{r change level position}
+airquality$Month <- fct_relevel(airquality$Month, 'Sept', 'July', 'May', 'Aug', 'June')
+
+levels(airquality$Month)
+
+# This may not seem useful at first, but when you need to visualize your data in a particular way, the fct_relevel function is extremely useful...
+
+ggplot(airquality, aes(Month, Temp)) +
+  geom_boxplot(aes(fill = Month)) +
+  ggtitle(label = "Notice how the order of the level 'Month' has changed")
+```
+
+---
+
+#### Factor Reorder
+
+And finally, it is often useful to reorder the factor in a way that is useful for visualization. For this, we can use the `fct_reorder` function.
+
+For this example, let's use the mtcars data set:
+```{r fct_reorder setup}
+mtcars$model <- row.names(mtcars)
+
+glimpse(mtcars)
+
+mtcars$model <- factor(mtcars$model)
+
+ggplot(mtcars, aes(mpg, model)) +
+  geom_point() +
+  ggtitle(label = "MPG vs. Car Model")
+
+```
+
+It's difficult to make comparisons when the data is scattered. But we're in luck! We can use the `fct_reorder` function to clean it up.
+
+```{r fct_reorder}
+#fct_reorder takes three arguments: f = factor you want to reorder, x = the variable in which the order will be based upon, and optionally fun (a function to  be used if there are multiple values of x for each value of f.) Here we focus on only the first two arguments.
+
+ggplot(mtcars, aes(mpg, fct_reorder(f = model, x = mpg))) +
+  geom_point() +
+  labs(y = "model") +
+  ggtitle(label = "We can make better comparison by reordering the levels based on the mpg values!") +
+  theme(plot.title = element_text(size = 10, face = 'bold'))
+
+```
 
 ---
 
 ### Lubridate
 
+The **Lubridate** package makes working with dates and times a breeze.
+
+Lubrdiate must be loaded explicitly as it is not part of the core tidyverse suite of packages.
+
+```{r load lubridate}
+library(lubridate)
+```
+
+```{r lubridate}
+#today
+today()
 
 
+year <- 2014
+month <- 1:12
+day <- 1:12
+
+my.dates <- data.frame(year = year,
+                   month = month,
+                   day = day)
+
+# make_datetime
+my.dates$date <- make_datetime(year, month, day)
+
+glimpse(my.dates)
+
+#take dates as strings and convert them to posixct dates using parse_date_time
+birthdays <- c("02-23-1955", "09-12-1958", "06-25-1987")
+
+birthdays <- parse_date_time(x = birthdays, orders = "%m-%d-%Y")
+lubridate::month(x = birthdays, label = TRUE , abbr = TRUE)
+
+birthdays %>% month(label = TRUE, abbr = FALSE)
+
+ymd(birthdays)
+
+day(birthdays)
+
+#durations
+dseconds(60)
+dminutes(5)
+dhours(c(24, 96))
+ddays(3:5)
+
+span <- interval(start = birthdays[1], end = birthdays[3])
+span
+
+dur <- as.duration(span)
+
+as.numeric(dur, "days")
+```
 ---
 
 ### Magrittr
@@ -247,7 +387,7 @@ gathered_scores %>%
 ```
 ---
 
-## Transform
+## Transform {.tabset .tabset-fade .tabset-pills}
 
 Once you have your data in the proper format, you probably want to perform some sort of analysis on it. This is where all the magic happens and dplyr is the package to do it.
 
@@ -257,6 +397,100 @@ dplyr functions take on a SQL like approach to wrangling your data. In conjuncti
 
 
 
-#STRINGR 
+### STRINGR 
 
-#PURRRRRR
+`stringr`, as you may have guessed, is the package for dealing with strings. Stringr works in conjunction with **regular expressions** for pattern matching and recognition.
+
+### PURRR {.tabset .tabset-fade .tabset-pills}
+
+The `purrr` package provides tools for functional programming.
+
+The functions within `purrr` work similarly to the base R `apply` functions
+
+`purrr` is not part of the core tidverse so load it explicitly.
+
+```{r purrr functions}
+library(purrr)
+```
+
+#### map
+
+The map functions allow you to perform a specific function over multiple arguments.
+
+```{r map}
+set.seed(23)
+
+n <- c(1, 5, 10)
+
+rnorm
+
+# map(.x, .f)
+map(.x = n, .f = rnorm)
+
+
+# map2(.x, .y, .f)
+means <- c(25, 50, 100)
+
+map2(.x = n, .y = means, .f = rnorm)
+
+#pmap for multiple arguments
+sdev <- c(1, 5, 20)
+
+pmap(.l = c(list(n), list(means), list(sdev)), rnorm)
+pmap(list(n, means, sdev), rnorm)
+```
+
+#### invoke
+
+In contrast, say we wanted to apply multiple functions to an argument. The `invoke_map` function can help with that.
+
+```{r invoke}
+list_of_functions <- c(rnorm, runif, rexp)
+values <- c(1:10)
+invoke_map(.f = list_of_functions, 5)
+
+```
+
+#### walk
+
+The walk function works similarly to `map` but is used for side effects. 
+
+Side effects are aconsidered to be anything that happens that isn't a return of the function:  
+* printing output 
+* plotting 
+* saving files 
+
+```{r walk functions}
+titles <- colnames(mtcars)
+pwalk(list(x = mtcars, main = titles), hist, xlab = "")
+```
+
+
+#### safely()
+
+The `safely` function is very useful for dealing with error.
+
+```{r safely}
+df <- data.frame(x = c(1:26),
+                 y = letters)
+#create function (safe_log) which 'safely' takes the log of a value or vector
+safe_log <- safely(log)
+
+safe_log(10)
+safe_log("a")
+
+#variable x is all numbers so we should not see any errors
+map(df$x, safe_log) %>%
+  head()
+
+# variable y contains all errors
+map (df, safe_log)
+
+safe_log(df)
+
+```
+## Visualization
+
+GGplot2 is the go to package for visualizing data. The multitude of functions allow for visual flexibility limited only by your imagination. I want to draw your attention to useful functions that you may not know about.
+
+Have you ever tried to plot two variables on the x or y axes using geom_point? 
