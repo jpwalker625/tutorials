@@ -1,0 +1,148 @@
+---
+title: "An Introduction to `forcats`"
+author: "Joseph Walker"
+date: "March 22, 2017"
+output: 
+  html_document: 
+    toc: yes
+---
+
+```{r global options, include = TRUE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+###Defining Factors
+The `forcats` package is part of the tidyverse and is useful for dealing with factors. Factors are simply categorical variables, useful for controlling the levels and order of a vector.
+
+Categoricalv or discrete variables, as opposed to continuous variables, are often qualitiative and can take on a finite number of values.
+
+Examples of categorical variables: types of fruit, locations, party preference, ethnicity.
+
+```{r Example 1}
+#colors is a character vector of length nine consisting of colors: red, blue, & green
+
+colors <- c("red","blue","green","green","red","blue","red","green","blue")
+class(colors)
+
+#The factor() function works by assigning integers (number values) to the categorical values (red, blue, green) of the vector or variable. 
+
+colors <- factor(colors)
+print(colors)
+class(colors)
+
+str(colors)
+#Each color is a level, and underlying each level is an integer associated with that level; red = 3, green = 2, blue = 1. The order of the levels is assigned alphabetically to the integer: b = 1, g = 2, r = 3.
+
+#We can reorder the levels if we want to:
+colors <- factor(colors, levels = c("red","blue", "green"))
+print(colors)
+#The order of the vector stays the same, but now the order of the levels has changed so that red = 1, blue = 2, green = 3
+str(colors)
+```
+
+Factors are a useful data structure that allow you to have more control over how you analyze and visualize your data.
+```{r Example 2}
+#Let's compare the summary function for colors as a character vector and as a factor.
+colors <- c("red","blue","green","green","red","blue","red","green","blue")
+
+summary(colors)
+
+colors <- factor(colors, levels = c("red","blue", "green"))
+
+summary(colors)
+
+#As factors, each color becomes a distinct group and summarized separately.
+```
+
+###The Forcats Package
+As useful as factors are, they can be quite a pain to work with at times. Luckily, `forcats` has functions that allow you to manipulate factors. 
+
+
+First, let's install the package using:
+`install.packages("forcats")`
+
+`forcats` also comes installed as part of the `tidyverse` suite of packages. It is not part of the core group of `tidyverse` packages so we must load it explicitly.
+
+```{r install/load forcats}
+library(tidyverse)
+library(forcats)
+```
+
+###Function: Factor Recode
+One useful function of `forcats` is `fct_recode`. This allows you to change the levels (or name/identity) of a factor. Here's an example:
+
+```{r change level values}
+#Let's use the airquality data set that comes pre-installed in R
+glimpse(airquality)
+
+#The month column is data type integer, let's change it to a factor 
+airquality$Month <- factor(airquality$Month)
+
+levels(airquality$Month)
+
+#Let's rename the months using the fct_recode function. 
+airquality$Month <- fct_recode(airquality$Month, May = '5', June = '6', July = '7', Aug = '8', Sept = '9')
+glimpse(airquality$Month)
+
+ggplot(airquality, aes(Month, Temp)) +
+  geom_boxplot(aes(fill = Month)) +
+  ggtitle(label = "Daily Temperatures Aggregated by Month")
+```
+
+###The Factor Reverse Function
+If you just want to reverse the order, there's the `fct_rev` function. You can even use it in line when defining your aesthetics in ggplot like so:
+```{r reverse the order}
+
+ggplot(airquality, aes(fct_rev(Month), Temp)) +
+  geom_boxplot(aes(fill = Month)) +
+  labs(x = "Month") +
+  ggtitle(label = "Our plot now has the x-axis in reverse order")
+```
+
+###The Factor Relevel Function
+Another useful function is `fct_relevel`. This function allows us to change any number of levels to any position.
+```{r change level position}
+airquality$Month <- fct_relevel(airquality$Month, 'Sept', 'July', 'May', 'Aug', 'June')
+
+levels(airquality$Month)
+
+# This may not seem useful at first, but when you need to visualize your data in a particular way, the fct_relevel function is extremely useful...
+
+ggplot(airquality, aes(Month, Temp)) +
+  geom_boxplot(aes(fill = Month)) +
+  ggtitle(label = "Notice how the order of the level 'Month' has changed")
+```
+
+###The Factor Reorder Function
+
+And finally, it is often useful to reorder the factor in a way that is useful for visualization. For this, we can use the `fct_reorder` function.
+
+For this example, let's use the mtcars data set:
+```{r fct_reorder setup}
+mtcars$model <- row.names(mtcars)
+
+glimpse(mtcars)
+
+mtcars$model <- factor(mtcars$model)
+
+ggplot(mtcars, aes(mpg, model)) +
+  geom_point() +
+  ggtitle(label = "MPG vs. Car Model")
+
+```
+
+It's difficult to make comparisons when the data is scattered. But we're in luck! We can use the `fct_reorder` function to clean it up.
+
+```{r fct_reorder}
+#fct_reorder takes three arguments: f = factor you want to reorder, x = the variable in which the order will be based upon, and optionally fun (a function to  be used if there are multiple values of x for each value of f.) Here we focus on only the first two arguments.
+
+ggplot(mtcars, aes(mpg, fct_reorder(f = model, x = mpg))) +
+  geom_point() +
+  labs(y = "model") +
+  ggtitle(label = "We can make better comparison by reordering the levels based on the mpg values!") +
+  theme(plot.title = element_text(size = 10, face = 'bold'))
+
+```
+
+
+
