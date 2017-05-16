@@ -303,10 +303,28 @@ glimpse(row.names(mtcars))
 
 ---
 
-### Tidyr {.tabset .tabset-pills}
+### Tidyr {.tabset .tabset-fade .tabset-pills}
 
 **The tidyr package is useful for visualizing and reshaping data.**
 
+#### Nest
+
+Nesting can be performed for many different purposes. One of the most useful I've found is for linear modeling.
+
+
+```{r nest function}
+
+nested_iris <- iris %>% nest(-Species)
+tbl_df(nested_iris)
+
+model <- function(df){lm(Sepal.Length ~ ., data = df)}
+
+nested_iris <- nested_iris %>% 
+  mutate(model = map(data, model))
+
+tbl_df(nested_iris)
+
+```
 #### Syntax
 
 The following functions are basic but essential to the foundation of the tidyverse.
@@ -391,15 +409,36 @@ gathered_scores %>%
 
 Once you have your data in the proper format, you probably want to perform some sort of analysis on it. This is where all the magic happens and dplyr is the package to do it.
 
-### Dplyr
+### Dplyr {.tabset .tabset-fade.tabset-pills}
 
 dplyr functions take on a SQL like approach to wrangling your data. In conjunction with the %>% (see [Magrittr](#anchor) for more details), R programming becomes much more efficient & intuitive.
 
+#### layering
 
+layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. Be careful of the consequences as they may not be transparent at first.
 
-### STRINGR 
+```{r layering example}
+glimpse(airquality)
 
-`stringr`, as you may have guessed, is the package for dealing with strings. Stringr works in conjunction with **regular expressions** for pattern matching and recognition.
+mean_temp_by_day <- airquality %>%
+  group_by(Month, Day) %>%
+  summarise(temp = mean(Temp))
+
+mean_temp_by_day
+
+mean_temp_by_month <- mean_temp_by_day %>%
+summarise(temp = mean(temp))
+
+mean_temp_by_month
+
+global.mean <- mean_temp_by_month %>%
+  summarise(temp = mean(temp))
+
+global.mean
+
+mean(airquality$Temp)
+```
+---
 
 ### PURRR {.tabset .tabset-fade .tabset-pills}
 
@@ -455,18 +494,22 @@ invoke_map(.f = list_of_functions, 5)
 
 The walk function works similarly to `map` but is used for side effects. 
 
-Side effects are aconsidered to be anything that happens that isn't a return of the function:  
-* printing output 
-* plotting 
-* saving files 
+Side effects are considered to be anything that happens that isn't a return of the function:  
+ 
+* printing output  
+* plotting   
+* saving files   
 
-```{r walk functions}
+```{r walk functions, error=TRUE}
+mtcars_subset <- mtcars %>% select(1:3)
 titles <- colnames(mtcars)
-pwalk(list(x = mtcars, main = titles), hist, xlab = "")
+pwalk(list(mtcars_subset, main = titles), hist, xlab = "")
+
 ```
 
+---
 
-#### safely()
+#### safely
 
 The `safely` function is very useful for dealing with error.
 
@@ -489,8 +532,86 @@ map (df, safe_log)
 safe_log(df)
 
 ```
-## Visualization
+
+---
+
+### STRINGR {.tabset .tabset-fade .tabset-pills}
+
+`stringr`, as you may have guessed, is the package for dealing with strings. Stringr works in conjunction with **regular expressions** for pattern matching and recognition.
+
+The `stringr` package needs to be loaded explicitly as it is not part of the CORE tidyerse.
+
+```{r stringr}
+library(stringr)
+
+#'fruit', 'sentences, and 'words' are datasets included with the stringr package
+
+some_words <- sample(words, 10)
+numbers <- 1:10
+
+some_words
+```
+
+#### str concatenate
+```{r str_c}
+# string concatenate str_c()
+map(str_c("word #", numbers,": ", some_words), list)
+
+```
+
+#### boundary
+```{r stringr boundary}
+some_sentences <- sample(sentences, 10)
+some_sentences
+
+str_count(string = some_sentences, pattern = boundary("word"))
+
+```
+
+#### case sensitive
+
+```{r casing}
+
+some_fruit <- sample(fruit, 10)
+some_fruit
+
+caps_fruit <- str_to_upper(some_fruit)
+caps_fruit
+
+str_to_lower(caps_fruit)
+```
+
+#### string split
+
+```{r str_split}
+# using some_sentences (see 'boundary' tab)
+
+some_sentences
+
+str_split(string = some_sentences, pattern = boundary("word"))
+
+```
+
+---
+
+# Visualization
 
 GGplot2 is the go to package for visualizing data. The multitude of functions allow for visual flexibility limited only by your imagination. I want to draw your attention to useful functions that you may not know about.
 
-Have you ever tried to plot two variables on the x or y axes using geom_point? 
+Have you ever tried to plot two variables on the x or y axes using geom_point?
+
+
+```{r interaction, error = TRUE}
+mtcars %>%
+  mutate(cyl = factor(cyl),
+         gear = factor(gear)) %>%
+  ggplot(aes(x = c(gear, cyl), y = mpg)) +
+  geom_point()
+
+mtcars %>%
+  mutate(cyl = factor(cyl),
+         gear = factor(gear)) %>%
+  ggplot(aes(x = interaction(cyl, gear, sep = "-"), y = mpg)) +
+  geom_point() +
+  labs (title = "cyl-gear vs. mpg", x = "Cyl-Gear")
+```
