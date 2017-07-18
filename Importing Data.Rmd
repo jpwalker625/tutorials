@@ -1,0 +1,102 @@
+---
+title: "Importing Data In R"
+output:
+  html_notebook: default
+  html_document: default
+---
+
+This tutorial will provide various examples of how to import data into R. In addition to the useful base R functions provided, we will cover various packages helpful for importing data. 
+
+The `utils` package has a built in function to download files from the web. It is aptly named `download.file`.
+
+```{r}
+#get the working directory
+getwd()
+
+#get the path of the file you want to download
+potatoes <- "https://assets.datacamp.com/production/course_1477/datasets/potatoes.csv"
+
+#download the file, no need to assign this opertion to a variable.
+download.file(url = potatoes, destfile = "potatoes.csv")
+
+#list the working directory to see only the .csv files
+dir(pattern = ".csv")
+
+head(read.csv("potatoes.csv"))
+```
+
+##readxl
+
+`read_excel` is a non-specific version of `read_xls` & `read_xlsx`. It auto detects the format of the file from the file extension.
+
+```{r}
+#load library
+library(readxl)
+
+#get the path to the file you want to download
+urbanpop <- "https://assets.datacamp.com/production/course_1477/datasets/urbanpop.xls"
+
+#download the file, specify the mode with which to write the file. "wb" = binary
+download.file(url = urbanpop, destfile = "urban_population.xls", mode = "wb")
+
+#read in the file using read_excel
+urban_data <- read_excel("urban_population.xls", sheet = 1)
+
+str(urban_data)
+```
+
+
+
+
+
+
+## gdata
+
+The `gdata` package has various tools for data manipulation. One of the most useful functions is `read.xls` which allows you to import files directly from a url. 
+
+`gdata` uses perl to convert xls --> csv files and reads them in using the `read.csv()` function. `read.csv()` is a wrapper around the `read.table()` function which has > 15 arguments. Therfore, the `read.xls` function will take on the arguments of `read.csv/.table` as well!
+
+
+*If you are getting error messages related to perl functionality, you may have to manually specify the location of perl on your computer with the `perl = C:/path_to_perl/.exe` argument. Follow these [instructions](#perl) for help downloading perl and how to locate it on your computer.
+
+
+```{r}
+#load the gdata package
+library(gdata)
+
+#get url of the file
+bp_url <- "http://www.stephansorger.com/content/DataScience_7_Case_Posey.xls"
+
+#load the data with read.xls
+posey_data <-  read.xls(bp_url, perl = "C:/Perl/bin/perl.exe", skip = 20)
+
+str(posey_data)
+```
+
+
+
+
+
+
+
+
+# Connecting to Databases
+
+#The RODBC package is useful for connecting to a database such as Microsoft SQL Server
+
+library(RODBC)
+
+con <- odbcDriverConnect(connection="DRIVER=SQL SERVER; SERVER=sqlwarehouse1.amyris.local; UID=dataout_reader; PWD=dataout_reader; DATABASE=dataout")
+
+
+query <-  sqlQuery(channel = con, query = "SELECT TOP 100* FROM furnace.hts_st4_requests")
+
+
+#### *perl instructions* {#perl}
+
+1) Open the command line and type `where perl` to determine the location of perl on your computer.
+2) If it is not installed, you can download it here: https://www.perl.org/get.html. The downloader will ask you if you you want to add perl to your PATH. Check the box to do so.
+3) Once you have perl installed, go back to the command line and type `path` or `where perl` to find the location of perl.
+4) Finally, assign the path of your perl to the `perl = path to perl` argument. Your code should look something like this:  
+
+> `my_data <- read.xls(xls = "http://example.com/data.xls", perl = "C:/perl/bin/perl.exe")`
