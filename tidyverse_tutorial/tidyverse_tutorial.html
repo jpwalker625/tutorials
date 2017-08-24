@@ -11,7 +11,7 @@
 
 <meta name="author" content="Joseph Walker" />
 
-<meta name="date" content="2017-05-15" />
+<meta name="date" content="2017-08-23" />
 
 <title>An Introduction to the Tidyverse</title>
 
@@ -245,7 +245,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">An Introduction to the Tidyverse</h1>
 <h4 class="author"><em>Joseph Walker</em></h4>
-<h4 class="date"><em>2017-05-15</em></h4>
+<h4 class="date"><em>2017-08-23</em></h4>
 
 </div>
 
@@ -302,18 +302,18 @@ div.tocify {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write_csv</span>(<span class="dt">x =</span> mtcars, <span class="dt">path =</span> <span class="st">&quot;mtcars_data.csv&quot;</span>) <span class="co"># writes to current working directory unless otherwise specified in the path argument</span>
 
 <span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="st">&quot;mtcars_data.csv&quot;</span>, <span class="dt">col_names =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## # A tibble: 32 × 11
+<pre><code>## # A tibble: 32 x 11
 ##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
 ##    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
-## 1   21.0     6 160.0   110  3.90 2.620 16.46     0     1     4     4
-## 2   21.0     6 160.0   110  3.90 2.875 17.02     0     1     4     4
-## 3   22.8     4 108.0    93  3.85 2.320 18.61     1     1     4     1
-## 4   21.4     6 258.0   110  3.08 3.215 19.44     1     0     3     1
-## 5   18.7     8 360.0   175  3.15 3.440 17.02     0     0     3     2
-## 6   18.1     6 225.0   105  2.76 3.460 20.22     1     0     3     1
-## 7   14.3     8 360.0   245  3.21 3.570 15.84     0     0     3     4
-## 8   24.4     4 146.7    62  3.69 3.190 20.00     1     0     4     2
-## 9   22.8     4 140.8    95  3.92 3.150 22.90     1     0     4     2
+##  1  21.0     6 160.0   110  3.90 2.620 16.46     0     1     4     4
+##  2  21.0     6 160.0   110  3.90 2.875 17.02     0     1     4     4
+##  3  22.8     4 108.0    93  3.85 2.320 18.61     1     1     4     1
+##  4  21.4     6 258.0   110  3.08 3.215 19.44     1     0     3     1
+##  5  18.7     8 360.0   175  3.15 3.440 17.02     0     0     3     2
+##  6  18.1     6 225.0   105  2.76 3.460 20.22     1     0     3     1
+##  7  14.3     8 360.0   245  3.21 3.570 15.84     0     0     3     4
+##  8  24.4     4 146.7    62  3.69 3.190 20.00     1     0     4     2
+##  9  22.8     4 140.8    95  3.92 3.150 22.90     1     0     4     2
 ## 10  19.2     6 167.6   123  3.92 3.440 18.30     1     0     4     4
 ## # ... with 22 more rows</code></pre>
 <hr />
@@ -459,7 +459,7 @@ airquality$Month &lt;-<span class="st"> </span><span class="kw">fct_recode</span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lubridate)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#today</span>
 <span class="kw">today</span>()</code></pre></div>
-<pre><code>## [1] &quot;2017-05-15&quot;</code></pre>
+<pre><code>## [1] &quot;2017-08-23&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">year &lt;-<span class="st"> </span><span class="dv">2014</span>
 month &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">12</span>
 day &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">12</span>
@@ -552,24 +552,24 @@ span</code></pre></div>
 <p>Nesting can be performed for many different purposes. One of the most useful I’ve found is for linear modeling.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nested_iris &lt;-<span class="st"> </span>iris %&gt;%<span class="st"> </span><span class="kw">nest</span>(-Species)
 <span class="kw">tbl_df</span>(nested_iris)</code></pre></div>
-<pre><code>## # A tibble: 3 × 2
+<pre><code>## # A tibble: 3 x 2
 ##      Species              data
 ##       &lt;fctr&gt;            &lt;list&gt;
-## 1     setosa &lt;tibble [50 × 4]&gt;
-## 2 versicolor &lt;tibble [50 × 4]&gt;
-## 3  virginica &lt;tibble [50 × 4]&gt;</code></pre>
+## 1     setosa &lt;tibble [50 x 4]&gt;
+## 2 versicolor &lt;tibble [50 x 4]&gt;
+## 3  virginica &lt;tibble [50 x 4]&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model &lt;-<span class="st"> </span>function(df){<span class="kw">lm</span>(Sepal.Length ~<span class="st"> </span>., <span class="dt">data =</span> df)}
 
 nested_iris &lt;-<span class="st"> </span>nested_iris %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="kw">map</span>(data, model))
 
 <span class="kw">tbl_df</span>(nested_iris)</code></pre></div>
-<pre><code>## # A tibble: 3 × 3
+<pre><code>## # A tibble: 3 x 3
 ##      Species              data    model
 ##       &lt;fctr&gt;            &lt;list&gt;   &lt;list&gt;
-## 1     setosa &lt;tibble [50 × 4]&gt; &lt;S3: lm&gt;
-## 2 versicolor &lt;tibble [50 × 4]&gt; &lt;S3: lm&gt;
-## 3  virginica &lt;tibble [50 × 4]&gt; &lt;S3: lm&gt;</code></pre>
+## 1     setosa &lt;tibble [50 x 4]&gt; &lt;S3: lm&gt;
+## 2 versicolor &lt;tibble [50 x 4]&gt; &lt;S3: lm&gt;
+## 3  virginica &lt;tibble [50 x 4]&gt; &lt;S3: lm&gt;</code></pre>
 </div>
 <div id="syntax" class="section level4">
 <h4>Syntax</h4>
@@ -579,18 +579,18 @@ nested_iris &lt;-<span class="st"> </span>nested_iris %&gt;%<span class="st"> </
 <p><code>View</code> (with a capital V) allows you to view the data in a separate tab as a spreadsheet or excel like format</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># tbl_df cleans it up</span>
 <span class="kw">tbl_df</span>(mtcars)</code></pre></div>
-<pre><code>## # A tibble: 32 × 12
+<pre><code>## # A tibble: 32 x 12
 ##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
-## *  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1   21.0     6 160.0   110  3.90 2.620 16.46     0     1     4     4
-## 2   21.0     6 160.0   110  3.90 2.875 17.02     0     1     4     4
-## 3   22.8     4 108.0    93  3.85 2.320 18.61     1     1     4     1
-## 4   21.4     6 258.0   110  3.08 3.215 19.44     1     0     3     1
-## 5   18.7     8 360.0   175  3.15 3.440 17.02     0     0     3     2
-## 6   18.1     6 225.0   105  2.76 3.460 20.22     1     0     3     1
-## 7   14.3     8 360.0   245  3.21 3.570 15.84     0     0     3     4
-## 8   24.4     4 146.7    62  3.69 3.190 20.00     1     0     4     2
-## 9   22.8     4 140.8    95  3.92 3.150 22.90     1     0     4     2
+##  * &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  21.0     6 160.0   110  3.90 2.620 16.46     0     1     4     4
+##  2  21.0     6 160.0   110  3.90 2.875 17.02     0     1     4     4
+##  3  22.8     4 108.0    93  3.85 2.320 18.61     1     1     4     1
+##  4  21.4     6 258.0   110  3.08 3.215 19.44     1     0     3     1
+##  5  18.7     8 360.0   175  3.15 3.440 17.02     0     0     3     2
+##  6  18.1     6 225.0   105  2.76 3.460 20.22     1     0     3     1
+##  7  14.3     8 360.0   245  3.21 3.570 15.84     0     0     3     4
+##  8  24.4     4 146.7    62  3.69 3.190 20.00     1     0     4     2
+##  9  22.8     4 140.8    95  3.92 3.150 22.90     1     0     4     2
 ## 10  19.2     6 167.6   123  3.92 3.440 18.30     1     0     4     4
 ## # ... with 22 more rows, and 1 more variables: model &lt;fctr&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># densely summarizes the data</span>
@@ -621,7 +621,7 @@ nested_iris &lt;-<span class="st"> </span>nested_iris %&gt;%<span class="st"> </
 <h5>Gather</h5>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># cases of TB for 3 countries occurring in 2 separate years </span>
 <span class="kw">tbl_df</span>(DSR::table4)</code></pre></div>
-<pre><code>## # A tibble: 3 × 3
+<pre><code>## # A tibble: 3 x 3
 ##       country `1999` `2000`
 ##        &lt;fctr&gt;  &lt;int&gt;  &lt;int&gt;
 ## 1 Afghanistan    745   2666
@@ -629,7 +629,7 @@ nested_iris &lt;-<span class="st"> </span>nested_iris %&gt;%<span class="st"> </
 ## 3       China 212258 213766</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gather</span>(<span class="dt">data =</span> table4, <span class="dt">key =</span> year, <span class="dt">value =</span> cases, <span class="dt">columns =</span> <span class="dv">2</span>:<span class="dv">3</span>) %&gt;%
 <span class="st">  </span><span class="kw">arrange</span>(country)</code></pre></div>
-<pre><code>## # A tibble: 6 × 3
+<pre><code>## # A tibble: 6 x 3
 ##       country  year  cases
 ##        &lt;fctr&gt; &lt;chr&gt;  &lt;int&gt;
 ## 1 Afghanistan  1999    745
@@ -640,7 +640,7 @@ nested_iris &lt;-<span class="st"> </span>nested_iris %&gt;%<span class="st"> </
 ## 6       China  2000 213766</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># population of 3 countries recorded in 2 separate years</span>
 <span class="kw">tbl_df</span>(table5)</code></pre></div>
-<pre><code>## # A tibble: 3 × 3
+<pre><code>## # A tibble: 3 x 3
 ##       country     `1999`     `2000`
 ##        &lt;fctr&gt;      &lt;int&gt;      &lt;int&gt;
 ## 1 Afghanistan   19987071   20595360
@@ -649,7 +649,7 @@ nested_iris &lt;-<span class="st"> </span>nested_iris %&gt;%<span class="st"> </
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">table5 %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> year, <span class="dt">value =</span> population, -country) %&gt;%
 <span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(population))</code></pre></div>
-<pre><code>## # A tibble: 6 × 3
+<pre><code>## # A tibble: 6 x 3
 ##       country  year population
 ##        &lt;fctr&gt; &lt;chr&gt;      &lt;int&gt;
 ## 1       China  2000 1280428583
@@ -671,18 +671,18 @@ nested_iris &lt;-<span class="st"> </span>nested_iris %&gt;%<span class="st"> </
 ## $ year       &lt;int&gt; 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 200...
 ## $ population &lt;int&gt; 17586073, 18415307, 19021226, 19496836, 19987071, 2...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">spread</span>(<span class="dt">data =</span> population, <span class="dt">key =</span> year, <span class="dt">value =</span> population)</code></pre></div>
-<pre><code>## # A tibble: 219 × 20
+<pre><code>## # A tibble: 219 x 20
 ##                country   `1995`   `1996`   `1997`   `1998`   `1999`
-## *                &lt;chr&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;
-## 1          Afghanistan 17586073 18415307 19021226 19496836 19987071
-## 2              Albania  3357858  3341043  3331317  3325456  3317941
-## 3              Algeria 29315463 29845208 30345466 30820435 31276295
-## 4       American Samoa    52874    53926    54942    55899    56768
-## 5              Andorra    63854    64274    64090    63799    64084
-## 6               Angola 12104952 12451945 12791388 13137542 13510616
-## 7             Anguilla     9807    10063    10305    10545    10797
-## 8  Antigua and Barbuda    68349    70245    72232    74206    76041
-## 9            Argentina 34833168 35264070 35690778 36109342 36514558
+##  *               &lt;chr&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;
+##  1         Afghanistan 17586073 18415307 19021226 19496836 19987071
+##  2             Albania  3357858  3341043  3331317  3325456  3317941
+##  3             Algeria 29315463 29845208 30345466 30820435 31276295
+##  4      American Samoa    52874    53926    54942    55899    56768
+##  5             Andorra    63854    64274    64090    63799    64084
+##  6              Angola 12104952 12451945 12791388 13137542 13510616
+##  7            Anguilla     9807    10063    10305    10545    10797
+##  8 Antigua and Barbuda    68349    70245    72232    74206    76041
+##  9           Argentina 34833168 35264070 35690778 36109342 36514558
 ## 10             Armenia  3223173  3173425  3137652  3112958  3093820
 ## # ... with 209 more rows, and 14 more variables: `2000` &lt;int&gt;,
 ## #   `2001` &lt;int&gt;, `2002` &lt;int&gt;, `2003` &lt;int&gt;, `2004` &lt;int&gt;, `2005` &lt;int&gt;,
@@ -698,18 +698,18 @@ nested_iris &lt;-<span class="st"> </span>nested_iris %&gt;%<span class="st"> </
 gathered_scores &lt;-<span class="st"> </span>scores %&gt;%<span class="st"> </span><span class="kw">gather</span>(exam, score, exam_1:exam_3)
 
 <span class="kw">tbl_df</span>(gathered_scores)</code></pre></div>
-<pre><code>## # A tibble: 18 × 4
+<pre><code>## # A tibble: 18 x 4
 ##       id group_id   exam score
 ##    &lt;int&gt;    &lt;dbl&gt;  &lt;chr&gt; &lt;dbl&gt;
-## 1      1     1211 exam_1    67
-## 2      2     1311 exam_1    77
-## 3      3     2634 exam_1    45
-## 4      4     1311 exam_1    92
-## 5      5     1211 exam_1    83
-## 6      6     2634 exam_1    70
-## 7      1     1211 exam_2    85
-## 8      2     1311 exam_2    76
-## 9      3     2634 exam_2    69
+##  1     1     1211 exam_1    67
+##  2     2     1311 exam_1    77
+##  3     3     2634 exam_1    45
+##  4     4     1311 exam_1    92
+##  5     5     1211 exam_1    83
+##  6     6     2634 exam_1    70
+##  7     1     1211 exam_2    85
+##  8     2     1311 exam_2    76
+##  9     3     2634 exam_2    69
 ## 10     4     1311 exam_2    94
 ## 11     5     1211 exam_2    88
 ## 12     6     2634 exam_2    80
@@ -735,6 +735,18 @@ gathered_scores &lt;-<span class="st"> </span>scores %&gt;%<span class="st"> </s
 <div id="dplyr" class="section level3 tabset tabset-fade.tabset-pills">
 <h3>Dplyr</h3>
 <p>dplyr functions take on a SQL like approach to wrangling your data. In conjunction with the %&gt;% (see <a href="#anchor">Magrittr</a> for more details), R programming becomes much more efficient &amp; intuitive.</p>
+<div id="the-big-5-verbs" class="section level4">
+<h4>The Big 5 (Verbs)</h4>
+<p>There are 5 essential data manipulation functions, or verbs, you should know:</p>
+<ul>
+<li>select<br />
+</li>
+<li>filter</li>
+<li>arrange()</li>
+<li>mutate()</li>
+<li>summarise()</li>
+</ul>
+</div>
 <div id="layering" class="section level4">
 <h4>layering</h4>
 <p>layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. Be careful of the consequences as they may not be transparent at first.</p>
@@ -752,27 +764,26 @@ gathered_scores &lt;-<span class="st"> </span>scores %&gt;%<span class="st"> </s
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">temp =</span> <span class="kw">mean</span>(Temp))
 
 mean_temp_by_day</code></pre></div>
-<pre><code>## Source: local data frame [153 x 3]
-## Groups: Month [?]
-## 
+<pre><code>## # A tibble: 153 x 3
+## # Groups:   Month [?]
 ##     Month   Day  temp
 ##    &lt;fctr&gt; &lt;int&gt; &lt;dbl&gt;
-## 1    Sept     1    91
-## 2    Sept     2    92
-## 3    Sept     3    93
-## 4    Sept     4    93
-## 5    Sept     5    87
-## 6    Sept     6    84
-## 7    Sept     7    80
-## 8    Sept     8    78
-## 9    Sept     9    75
+##  1   Sept     1    91
+##  2   Sept     2    92
+##  3   Sept     3    93
+##  4   Sept     4    93
+##  5   Sept     5    87
+##  6   Sept     6    84
+##  7   Sept     7    80
+##  8   Sept     8    78
+##  9   Sept     9    75
 ## 10   Sept    10    73
 ## # ... with 143 more rows</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean_temp_by_month &lt;-<span class="st"> </span>mean_temp_by_day %&gt;%
 <span class="kw">summarise</span>(<span class="dt">temp =</span> <span class="kw">mean</span>(temp))
 
 mean_temp_by_month</code></pre></div>
-<pre><code>## # A tibble: 5 × 2
+<pre><code>## # A tibble: 5 x 2
 ##    Month     temp
 ##   &lt;fctr&gt;    &lt;dbl&gt;
 ## 1   Sept 76.90000
@@ -784,7 +795,7 @@ mean_temp_by_month</code></pre></div>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">temp =</span> <span class="kw">mean</span>(temp))
 
 global.mean</code></pre></div>
-<pre><code>## # A tibble: 1 × 1
+<pre><code>## # A tibble: 1 x 1
 ##       temp
 ##      &lt;dbl&gt;
 ## 1 77.88387</code></pre>
@@ -809,7 +820,7 @@ n &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</sp
 rnorm</code></pre></div>
 <pre><code>## function (n, mean = 0, sd = 1) 
 ## .Call(C_rnorm, n, mean, sd)
-## &lt;bytecode: 0x000000000d95eaa8&gt;
+## &lt;bytecode: 0x000000000d6df9f0&gt;
 ## &lt;environment: namespace:stats&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># map(.x, .f)</span>
 <span class="kw">map</span>(<span class="dt">.x =</span> n, <span class="dt">.f =</span> rnorm)</code></pre></div>

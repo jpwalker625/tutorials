@@ -413,6 +413,16 @@ Once you have your data in the proper format, you probably want to perform some 
 
 dplyr functions take on a SQL like approach to wrangling your data. In conjunction with the %>% (see [Magrittr](#anchor) for more details), R programming becomes much more efficient & intuitive.
 
+#### The Big 5 (Verbs)
+
+There are 5 essential data manipulation functions, or verbs, you should know:
+
+* select(), which returns a subset of the columns 
+* filter(), that is able to return a subset of the rows 
+* arrange(), that reorders the rows according to single or multiple variables 
+* mutate(), used to add columns from existing data
+* summarise(), which reduces each group to a single row by calculating aggregate measures 
+
 #### layering
 
 layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. Be careful of the consequences as they may not be transparent at first.
@@ -438,6 +448,9 @@ global.mean
 
 mean(airquality$Temp)
 ```
+
+
+
 ---
 
 ### PURRR {.tabset .tabset-fade .tabset-pills}
