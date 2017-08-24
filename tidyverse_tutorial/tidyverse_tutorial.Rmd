@@ -415,6 +415,7 @@ dplyr functions take on a SQL like approach to wrangling your data. In conjuncti
 
 #### The Big 5 (Verbs)
 
+<<<<<<< HEAD
 There are 5 essential data manipulation functions, or verbs, you should know:
 
 * select(), which returns a subset of the columns 
@@ -422,6 +423,33 @@ There are 5 essential data manipulation functions, or verbs, you should know:
 * arrange(), that reorders the rows according to single or multiple variables 
 * mutate(), used to add columns from existing data
 * summarise(), which reduces each group to a single row by calculating aggregate measures 
+=======
+```{r select}
+#Following examples use the 'profiles' dataset from the okcupiddata package
+
+#load the library
+library(okcupiddata)
+
+#convert profiles dataset into tbl_df (tibble)
+#Makes viewing the following examples much easier
+profiles <- tbl_df(profiles)
+
+#get column names
+names(profiles)
+
+#use select function to get specified columns
+select(profiles, 1:6, -5)
+
+#use names rather than indexes
+select(profiles, age:education)
+
+#use starts_with() to select certain columns
+select(profiles, starts_with("d"), pets, smokes)
+
+#use contains to select specific columns
+select(profiles, job, contains("dr"))
+```
+>>>>>>> refs/remotes/origin/tidyverse-dplyr-select-examples
 
 #### layering
 
