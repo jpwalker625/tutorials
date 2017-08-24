@@ -45,7 +45,6 @@ tidyverse_packages(include_self = TRUE)
 ```
 
 ## A Model for Data Analysis
-
 So where to start?
 
 One of the key concepts in R for Data Science is understanding the model used to approach a data science project.  
@@ -53,16 +52,17 @@ One of the key concepts in R for Data Science is understanding the model used to
 We can think about this model more broadly to fit the scope of any problem we have or data we seek to analyze:  
 
 ![](model.png)  
+
+So then, let's dive into the packages as we follow along the steps of our model.  
+
 ---
-So then, let's dive into the packages as we follow along the steps of our model.
+
 
 # Import {.tabset .tabset-pills}
 
 In order to work with your data in R, you have to import it!
 
-
 ## readr
-
 
 * functions tend to be faster (~10x)
 * readr functions produce *tibbles* and don't convert character vectors to factors *(more on that later)*
@@ -325,6 +325,9 @@ nested_iris <- nested_iris %>%
 tbl_df(nested_iris)
 
 ```
+
+---
+
 #### Syntax
 
 The following functions are basic but essential to the foundation of the tidyverse.
@@ -413,9 +416,8 @@ Once you have your data in the proper format, you probably want to perform some 
 
 dplyr functions take on a SQL like approach to wrangling your data. In conjunction with the %>% (see [Magrittr](#anchor) for more details), R programming becomes much more efficient & intuitive.
 
-#### The Big 5 (Verbs)
+#### The Big 5 (Verbs) {.tabset .tabset-fade.tabset-pills}
 
-<<<<<<< HEAD
 There are 5 essential data manipulation functions, or verbs, you should know:
 
 * select(), which returns a subset of the columns 
@@ -423,7 +425,8 @@ There are 5 essential data manipulation functions, or verbs, you should know:
 * arrange(), that reorders the rows according to single or multiple variables 
 * mutate(), used to add columns from existing data
 * summarise(), which reduces each group to a single row by calculating aggregate measures 
-=======
+
+##### Select
 ```{r select}
 #Following examples use the 'profiles' dataset from the okcupiddata package
 
@@ -449,11 +452,12 @@ select(profiles, starts_with("d"), pets, smokes)
 #use contains to select specific columns
 select(profiles, job, contains("dr"))
 ```
->>>>>>> refs/remotes/origin/tidyverse-dplyr-select-examples
+
+---
 
 #### layering
 
-layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. Be careful of the consequences as they may not be transparent at first.
+Layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. Be careful of the consequences as they may not be transparent at first.
 
 ```{r layering example}
 glimpse(airquality)
@@ -476,8 +480,6 @@ global.mean
 
 mean(airquality$Temp)
 ```
-
-
 
 ---
 
@@ -519,6 +521,7 @@ sdev <- c(1, 5, 20)
 pmap(.l = c(list(n), list(means), list(sdev)), rnorm)
 pmap(list(n, means, sdev), rnorm)
 ```
+---
 
 #### invoke
 
@@ -530,6 +533,7 @@ values <- c(1:10)
 invoke_map(.f = list_of_functions, 5)
 
 ```
+---
 
 #### walk
 
@@ -547,7 +551,6 @@ titles <- colnames(mtcars)
 pwalk(list(mtcars_subset, main = titles), hist, xlab = "")
 
 ```
-
 ---
 
 #### safely
@@ -573,7 +576,6 @@ map (df, safe_log)
 safe_log(df)
 
 ```
-
 ---
 
 ### STRINGR {.tabset .tabset-fade .tabset-pills}
@@ -599,6 +601,7 @@ some_words
 map(str_c("word #", numbers,": ", some_words), list)
 
 ```
+---
 
 #### boundary
 ```{r stringr boundary}
@@ -608,6 +611,7 @@ some_sentences
 str_count(string = some_sentences, pattern = boundary("word"))
 
 ```
+---
 
 #### case sensitive
 
@@ -621,6 +625,7 @@ caps_fruit
 
 str_to_lower(caps_fruit)
 ```
+---
 
 #### string split
 
@@ -632,7 +637,6 @@ some_sentences
 str_split(string = some_sentences, pattern = boundary("word"))
 
 ```
-
 ---
 
 # Visualization
@@ -656,3 +660,4 @@ mtcars %>%
   geom_point() +
   labs (title = "cyl-gear vs. mpg", x = "Cyl-Gear")
 ```
+---
