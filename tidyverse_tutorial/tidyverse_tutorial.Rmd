@@ -413,6 +413,34 @@ Once you have your data in the proper format, you probably want to perform some 
 
 dplyr functions take on a SQL like approach to wrangling your data. In conjunction with the %>% (see [Magrittr](#anchor) for more details), R programming becomes much more efficient & intuitive.
 
+#### The Big 5 (Verbs)
+
+```{r select}
+#Following examples use the 'profiles' dataset from the okcupiddata package
+
+#load the library
+library(okcupiddata)
+
+#convert profiles dataset into tbl_df (tibble)
+#Makes viewing the following examples much easier
+profiles <- tbl_df(profiles)
+
+#get column names
+names(profiles)
+
+#use select function to get specified columns
+select(profiles, 1:6, -5)
+
+#use names rather than indexes
+select(profiles, age:education)
+
+#use starts_with() to select certain columns
+select(profiles, starts_with("d"), pets, smokes)
+
+#use contains to select specific columns
+select(profiles, job, contains("dr"))
+```
+
 #### layering
 
 layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. Be careful of the consequences as they may not be transparent at first.
