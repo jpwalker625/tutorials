@@ -455,6 +455,34 @@ select(profiles, job, contains("dr"))
 
 ---
 
+##### Filter
+```{r filter}
+
+```
+
+---
+
+##### Arrange
+```{r arrange}
+
+```
+
+---
+
+##### Mutate
+```{r mutate}
+
+```
+
+---
+
+#####Summarise
+```{r summarise}
+
+```
+
+---
+
 #### layering
 
 Layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. Be careful of the consequences as they may not be transparent at first.

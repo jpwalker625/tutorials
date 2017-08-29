@@ -11,7 +11,7 @@
 
 <meta name="author" content="Joseph Walker" />
 
-<meta name="date" content="2017-08-24" />
+<meta name="date" content="2017-08-29" />
 
 <title>An Introduction to the Tidyverse</title>
 
@@ -245,7 +245,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">An Introduction to the Tidyverse</h1>
 <h4 class="author"><em>Joseph Walker</em></h4>
-<h4 class="date"><em>2017-08-24</em></h4>
+<h4 class="date"><em>2017-08-29</em></h4>
 
 </div>
 
@@ -461,7 +461,7 @@ airquality$Month &lt;-<span class="st"> </span><span class="kw">fct_recode</span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lubridate)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#today</span>
 <span class="kw">today</span>()</code></pre></div>
-<pre><code>## [1] &quot;2017-08-24&quot;</code></pre>
+<pre><code>## [1] &quot;2017-08-29&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">year &lt;-<span class="st"> </span><span class="dv">2014</span>
 month &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">12</span>
 day &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">12</span>
@@ -832,10 +832,26 @@ profiles &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(profiles)
 ## # ... with 59,936 more rows</code></pre>
 <hr />
 </div>
+<div id="filter" class="section level5">
+<h5>Filter</h5>
+<hr />
+</div>
+<div id="arrange" class="section level5">
+<h5>Arrange</h5>
+<hr />
+</div>
+<div id="mutate" class="section level5">
+<h5>Mutate</h5>
+<hr />
+</div>
+<div id="summarise" class="section level5">
+<h5>Summarise</h5>
+<hr />
+</div>
 </div>
 <div id="layering" class="section level4">
 <h4>layering</h4>
-<p>layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. Be careful of the consequences as they may not be transparent at first.</p>
+<p>Layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. Be careful of the consequences as they may not be transparent at first.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glimpse</span>(airquality)</code></pre></div>
 <pre><code>## Observations: 153
 ## Variables: 6
@@ -906,7 +922,7 @@ n &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</sp
 rnorm</code></pre></div>
 <pre><code>## function (n, mean = 0, sd = 1) 
 ## .Call(C_rnorm, n, mean, sd)
-## &lt;bytecode: 0x000000000a9dbf50&gt;
+## &lt;bytecode: 0x00000000077e0388&gt;
 ## &lt;environment: namespace:stats&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># map(.x, .f)</span>
 <span class="kw">map</span>(<span class="dt">.x =</span> n, <span class="dt">.f =</span> rnorm)</code></pre></div>
