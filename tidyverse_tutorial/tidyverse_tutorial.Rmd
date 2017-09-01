@@ -426,66 +426,130 @@ There are 5 essential data manipulation functions, or verbs, you should know:
 * mutate(), used to add columns from existing data
 * summarise(), which reduces each group to a single row by calculating aggregate measures 
 
-##### Select
-```{r select}
-#Following examples use the 'profiles' dataset from the okcupiddata package
+The following examples uses the `flights` dataset from the `nycflights13` package.
 
-#load the library
-library(okcupiddata)
+```{r nycflights13}
+#load the nycflights13 library
+library(nycflights13)
 
 #convert profiles dataset into tbl_df (tibble)
-#Makes viewing the following examples much easier
-profiles <- tbl_df(profiles)
+#which makes viewing the following examples much easier
+flights <- tbl_df(flights)
 
-#get column names
-names(profiles)
+#have a look at the flights dataset
+glimpse(flights)
+```
 
+##### Select
+You can select particular columns using the name(s) of the column(s), the numerical index of a column or range of columns, excluding particular columns using `-`, or with specific helper functions using in conjunction with the select function.
+
+```{r select}
 #use select function to get specified columns
-select(profiles, 1:6, -5)
+flights %>% select(1:5)
 
-#use names rather than indexes
-select(profiles, age:education)
+#use names, indexes, and exclusion
+flights %>% select(1:6, -5, carrier, origin, dest)
 
-#use starts_with() to select certain columns
-select(profiles, starts_with("d"), pets, smokes)
+#use helper function 'contains' to select specific columns
+flights %>% select(contains("time"))
 
-#use contains to select specific columns
-select(profiles, job, contains("dr"))
+#use helper function'starts_with' to select specific columns
+flights %>% select(starts_with("dep"), ends_with("time"))
 ```
 
 ---
 
 ##### Filter
-```{r filter}
 
+The `filter()` function uses the following logical operators to subset rows of the dataset:  
+
+* `x < y` x is less than y 
+* `x <= y` x is less than or equal to y
+* `x > y` x is greater than  y
+* `x >= y` x is greater than or equal to y
+* `x == y` x is equal to y 
+* `x != y ` x is not equal to y 
+* `x %in% c(y, z)` TRUE if x is in the vector c(y,z)  
+* `|` OR operator, i.e. x < y | x > z 
+* `&` and operator, i.w. x != 'NA' & x < y 
+
+```{r filter}
+#filter for red-eye flights
+flights %>% filter(dep_time < 600)
+
+#filter flights by carrier (UA = United Airlines)
+flights %>% filter(carrier == 'UA')
+
+#filter flights out of JFK going to SFO and LAX
+flights %>% filter(origin == 'JFK' & dest %in% c('SFO', 'LAX'))
+
+#filter flights that left late or arrived ahead of time
+flights %>% filter(dep_delay > 0 | arr_delay < 0)
 ```
 
 ---
 
 ##### Arrange
-```{r arrange}
 
+Arrange can be used for either ascending order or descending order. The latter requires using the `desc()` function withing the call to `arrange()`
+```{r arrange}
+#filter by carrier: AA, origin: JFK, and month: June, arrange by flight distance
+flights %>% filter(carrier == 'AA' & origin == 'JFK' & month == 6) %>%
+  arrange(dest)
+
+#arrange using the desc() function
+flights %>% filter(origin != 'JFK' & month > 9) %>%
+  arrange(desc(air_time))
 ```
 
 ---
 
 ##### Mutate
 ```{r mutate}
+#create a new column : date 
+flights %>% mutate(date = as.Date(paste(year,month,day, sep = '-'))) %>%
+  select(1:3, date) %>% distinct()
 
+#convert airtime to hours
+flights %>% mutate(air_time_hrs = air_time / 60) %>% select(air_time, air_time_hrs)
 ```
 
 ---
 
-#####Summarise
+##### Summarise
 ```{r summarise}
-
+#summarise the distance column of the flights dataset
+flights %>% summarise(avg_dist = mean(distance),
+                      longest_dist = max(distance),
+                      shortest_dist = min(distance))
 ```
 
 ---
+
+#### grouping
+
+Another powerful feature of dplyr is grouping. We can define groups within datasets using the `group_by` statement. With these defined groups in place, we can then influence how the summarise function works on the dataset.
+
+```{r}
+#find the most visited destination for each carrier, arrange from high to low by count.
+flights %>% 
+  group_by(carrier, dest) %>% 
+  summarise(count = n()) %>%
+  filter(count == max(count)) %>%
+  arrange(desc(count))
+
+# monthly flight data
+flights %>% 
+  group_by(month, carrier) %>%
+  summarise(total_flights = n(),
+            distinct_destinations = n_distinct(dest),
+            avg_dep_time = mean(dep_time, na.rm = TRUE),
+            longest_flight = max(air_time,  na.rm = TRUE))
+```
 
 #### layering
 
-Layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. Be careful of the consequences as they may not be transparent at first.
+Layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. The order of your grouping matters so be careful as the consequences of your order may not be transparent at first.
 
 ```{r layering example}
 glimpse(airquality)

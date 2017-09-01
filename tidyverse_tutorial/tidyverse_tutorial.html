@@ -11,7 +11,7 @@
 
 <meta name="author" content="Joseph Walker" />
 
-<meta name="date" content="2017-08-29" />
+<meta name="date" content="2017-09-01" />
 
 <title>An Introduction to the Tidyverse</title>
 
@@ -245,7 +245,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">An Introduction to the Tidyverse</h1>
 <h4 class="author"><em>Joseph Walker</em></h4>
-<h4 class="date"><em>2017-08-29</em></h4>
+<h4 class="date"><em>2017-09-01</em></h4>
 
 </div>
 
@@ -461,7 +461,7 @@ airquality$Month &lt;-<span class="st"> </span><span class="kw">fct_recode</span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lubridate)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#today</span>
 <span class="kw">today</span>()</code></pre></div>
-<pre><code>## [1] &quot;2017-08-29&quot;</code></pre>
+<pre><code>## [1] &quot;2017-09-01&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">year &lt;-<span class="st"> </span><span class="dv">2014</span>
 month &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">12</span>
 day &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">12</span>
@@ -748,110 +748,349 @@ gathered_scores &lt;-<span class="st"> </span>scores %&gt;%<span class="st"> </s
 <li>mutate(), used to add columns from existing data</li>
 <li>summarise(), which reduces each group to a single row by calculating aggregate measures</li>
 </ul>
-<div id="select" class="section level5">
-<h5>Select</h5>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Following examples use the 'profiles' dataset from the okcupiddata package</span>
-
-<span class="co">#load the library</span>
-<span class="kw">library</span>(okcupiddata)
+<p>The following examples uses the <code>flights</code> dataset from the <code>nycflights13</code> package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#load the nycflights13 library</span>
+<span class="kw">library</span>(nycflights13)
 
 <span class="co">#convert profiles dataset into tbl_df (tibble)</span>
-<span class="co">#Makes viewing the following examples much easier</span>
-profiles &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(profiles)
+<span class="co">#which makes viewing the following examples much easier</span>
+flights &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(flights)
 
-<span class="co">#get column names</span>
-<span class="kw">names</span>(profiles)</code></pre></div>
-<pre><code>##  [1] &quot;age&quot;         &quot;body_type&quot;   &quot;diet&quot;        &quot;drinks&quot;      &quot;drugs&quot;      
-##  [6] &quot;education&quot;   &quot;ethnicity&quot;   &quot;height&quot;      &quot;income&quot;      &quot;job&quot;        
-## [11] &quot;last_online&quot; &quot;location&quot;    &quot;offspring&quot;   &quot;orientation&quot; &quot;pets&quot;       
-## [16] &quot;religion&quot;    &quot;sex&quot;         &quot;sign&quot;        &quot;smokes&quot;      &quot;speaks&quot;     
-## [21] &quot;status&quot;      &quot;essay0&quot;</code></pre>
+<span class="co">#have a look at the flights dataset</span>
+<span class="kw">glimpse</span>(flights)</code></pre></div>
+<pre><code>## Observations: 336,776
+## Variables: 19
+## $ year           &lt;int&gt; 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013,...
+## $ month          &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
+## $ day            &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
+## $ dep_time       &lt;int&gt; 517, 533, 542, 544, 554, 554, 555, 557, 557, 55...
+## $ sched_dep_time &lt;int&gt; 515, 529, 540, 545, 600, 558, 600, 600, 600, 60...
+## $ dep_delay      &lt;dbl&gt; 2, 4, 2, -1, -6, -4, -5, -3, -3, -2, -2, -2, -2...
+## $ arr_time       &lt;int&gt; 830, 850, 923, 1004, 812, 740, 913, 709, 838, 7...
+## $ sched_arr_time &lt;int&gt; 819, 830, 850, 1022, 837, 728, 854, 723, 846, 7...
+## $ arr_delay      &lt;dbl&gt; 11, 20, 33, -18, -25, 12, 19, -14, -8, 8, -2, -...
+## $ carrier        &lt;chr&gt; &quot;UA&quot;, &quot;UA&quot;, &quot;AA&quot;, &quot;B6&quot;, &quot;DL&quot;, &quot;UA&quot;, &quot;B6&quot;, &quot;EV&quot;,...
+## $ flight         &lt;int&gt; 1545, 1714, 1141, 725, 461, 1696, 507, 5708, 79...
+## $ tailnum        &lt;chr&gt; &quot;N14228&quot;, &quot;N24211&quot;, &quot;N619AA&quot;, &quot;N804JB&quot;, &quot;N668DN...
+## $ origin         &lt;chr&gt; &quot;EWR&quot;, &quot;LGA&quot;, &quot;JFK&quot;, &quot;JFK&quot;, &quot;LGA&quot;, &quot;EWR&quot;, &quot;EWR&quot;...
+## $ dest           &lt;chr&gt; &quot;IAH&quot;, &quot;IAH&quot;, &quot;MIA&quot;, &quot;BQN&quot;, &quot;ATL&quot;, &quot;ORD&quot;, &quot;FLL&quot;...
+## $ air_time       &lt;dbl&gt; 227, 227, 160, 183, 116, 150, 158, 53, 140, 138...
+## $ distance       &lt;dbl&gt; 1400, 1416, 1089, 1576, 762, 719, 1065, 229, 94...
+## $ hour           &lt;dbl&gt; 5, 5, 5, 5, 6, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5,...
+## $ minute         &lt;dbl&gt; 15, 29, 40, 45, 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, ...
+## $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05:00:00, 2013...</code></pre>
+<div id="select" class="section level5">
+<h5>Select</h5>
+<p>You can select particular columns using the name(s) of the column(s), the numerical index of a column or range of columns, excluding particular columns using <code>-</code>, or with specific helper functions using in conjunction with the select function.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#use select function to get specified columns</span>
-<span class="kw">select</span>(profiles, <span class="dv">1</span>:<span class="dv">6</span>, -<span class="dv">5</span>)</code></pre></div>
-<pre><code>## # A tibble: 59,946 x 5
-##      age      body_type              diet     drinks
-##    &lt;int&gt;          &lt;chr&gt;             &lt;chr&gt;      &lt;chr&gt;
-##  1    22 a little extra strictly anything   socially
-##  2    35        average      mostly other      often
-##  3    38           thin          anything   socially
-##  4    23           thin        vegetarian   socially
-##  5    29       athletic              &lt;NA&gt;   socially
-##  6    29        average   mostly anything   socially
-##  7    32            fit strictly anything   socially
-##  8    31        average   mostly anything   socially
-##  9    24           &lt;NA&gt; strictly anything   socially
-## 10    37       athletic   mostly anything not at all
-## # ... with 59,936 more rows, and 1 more variables: education &lt;chr&gt;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#use names rather than indexes</span>
-<span class="kw">select</span>(profiles, age:education)</code></pre></div>
-<pre><code>## # A tibble: 59,946 x 6
-##      age      body_type              diet     drinks     drugs
-##    &lt;int&gt;          &lt;chr&gt;             &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;
-##  1    22 a little extra strictly anything   socially     never
-##  2    35        average      mostly other      often sometimes
-##  3    38           thin          anything   socially      &lt;NA&gt;
-##  4    23           thin        vegetarian   socially      &lt;NA&gt;
-##  5    29       athletic              &lt;NA&gt;   socially     never
-##  6    29        average   mostly anything   socially      &lt;NA&gt;
-##  7    32            fit strictly anything   socially     never
-##  8    31        average   mostly anything   socially     never
-##  9    24           &lt;NA&gt; strictly anything   socially      &lt;NA&gt;
-## 10    37       athletic   mostly anything not at all     never
-## # ... with 59,936 more rows, and 1 more variables: education &lt;chr&gt;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#use starts_with() to select certain columns</span>
-<span class="kw">select</span>(profiles, <span class="kw">starts_with</span>(<span class="st">&quot;d&quot;</span>), pets, smokes)</code></pre></div>
-<pre><code>## # A tibble: 59,946 x 5
-##                 diet     drinks     drugs                      pets
-##                &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;                     &lt;chr&gt;
-##  1 strictly anything   socially     never likes dogs and likes cats
-##  2      mostly other      often sometimes likes dogs and likes cats
-##  3          anything   socially      &lt;NA&gt;                  has cats
-##  4        vegetarian   socially      &lt;NA&gt;                likes cats
-##  5              &lt;NA&gt;   socially     never likes dogs and likes cats
-##  6   mostly anything   socially      &lt;NA&gt;                likes cats
-##  7 strictly anything   socially     never likes dogs and likes cats
-##  8   mostly anything   socially     never likes dogs and likes cats
-##  9 strictly anything   socially      &lt;NA&gt; likes dogs and likes cats
-## 10   mostly anything not at all     never likes dogs and likes cats
-## # ... with 59,936 more rows, and 1 more variables: smokes &lt;chr&gt;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#use contains to select specific columns</span>
-<span class="kw">select</span>(profiles, job, <span class="kw">contains</span>(<span class="st">&quot;dr&quot;</span>))</code></pre></div>
-<pre><code>## # A tibble: 59,946 x 3
-##                               job     drinks     drugs
-##                             &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;
-##  1                 transportation   socially     never
-##  2           hospitality / travel      often sometimes
-##  3                           &lt;NA&gt;   socially      &lt;NA&gt;
-##  4                        student   socially      &lt;NA&gt;
-##  5    artistic / musical / writer   socially     never
-##  6 computer / hardware / software   socially      &lt;NA&gt;
-##  7                           &lt;NA&gt;   socially     never
-##  8    artistic / musical / writer   socially     never
-##  9                           &lt;NA&gt;   socially      &lt;NA&gt;
-## 10                        student not at all     never
-## # ... with 59,936 more rows</code></pre>
+flights %&gt;%<span class="st"> </span><span class="kw">select</span>(<span class="dv">1</span>:<span class="dv">5</span>)</code></pre></div>
+<pre><code>## # A tibble: 336,776 x 5
+##     year month   day dep_time sched_dep_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515
+##  2  2013     1     1      533            529
+##  3  2013     1     1      542            540
+##  4  2013     1     1      544            545
+##  5  2013     1     1      554            600
+##  6  2013     1     1      554            558
+##  7  2013     1     1      555            600
+##  8  2013     1     1      557            600
+##  9  2013     1     1      557            600
+## 10  2013     1     1      558            600
+## # ... with 336,766 more rows</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#use names, indexes, and exclusion</span>
+flights %&gt;%<span class="st"> </span><span class="kw">select</span>(<span class="dv">1</span>:<span class="dv">6</span>, -<span class="dv">5</span>, carrier, origin, dest)</code></pre></div>
+<pre><code>## # A tibble: 336,776 x 8
+##     year month   day dep_time dep_delay carrier origin  dest
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
+##  1  2013     1     1      517         2      UA    EWR   IAH
+##  2  2013     1     1      533         4      UA    LGA   IAH
+##  3  2013     1     1      542         2      AA    JFK   MIA
+##  4  2013     1     1      544        -1      B6    JFK   BQN
+##  5  2013     1     1      554        -6      DL    LGA   ATL
+##  6  2013     1     1      554        -4      UA    EWR   ORD
+##  7  2013     1     1      555        -5      B6    EWR   FLL
+##  8  2013     1     1      557        -3      EV    LGA   IAD
+##  9  2013     1     1      557        -3      B6    JFK   MCO
+## 10  2013     1     1      558        -2      AA    LGA   ORD
+## # ... with 336,766 more rows</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#use helper function 'contains' to select specific columns</span>
+flights %&gt;%<span class="st"> </span><span class="kw">select</span>(<span class="kw">contains</span>(<span class="st">&quot;time&quot;</span>))</code></pre></div>
+<pre><code>## # A tibble: 336,776 x 6
+##    dep_time sched_dep_time arr_time sched_arr_time air_time
+##       &lt;int&gt;          &lt;int&gt;    &lt;int&gt;          &lt;int&gt;    &lt;dbl&gt;
+##  1      517            515      830            819      227
+##  2      533            529      850            830      227
+##  3      542            540      923            850      160
+##  4      544            545     1004           1022      183
+##  5      554            600      812            837      116
+##  6      554            558      740            728      150
+##  7      555            600      913            854      158
+##  8      557            600      709            723       53
+##  9      557            600      838            846      140
+## 10      558            600      753            745      138
+## # ... with 336,766 more rows, and 1 more variables: time_hour &lt;dttm&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#use helper function'starts_with' to select specific columns</span>
+flights %&gt;%<span class="st"> </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">&quot;dep&quot;</span>), <span class="kw">ends_with</span>(<span class="st">&quot;time&quot;</span>))</code></pre></div>
+<pre><code>## # A tibble: 336,776 x 6
+##    dep_time dep_delay sched_dep_time arr_time sched_arr_time air_time
+##       &lt;int&gt;     &lt;dbl&gt;          &lt;int&gt;    &lt;int&gt;          &lt;int&gt;    &lt;dbl&gt;
+##  1      517         2            515      830            819      227
+##  2      533         4            529      850            830      227
+##  3      542         2            540      923            850      160
+##  4      544        -1            545     1004           1022      183
+##  5      554        -6            600      812            837      116
+##  6      554        -4            558      740            728      150
+##  7      555        -5            600      913            854      158
+##  8      557        -3            600      709            723       53
+##  9      557        -3            600      838            846      140
+## 10      558        -2            600      753            745      138
+## # ... with 336,766 more rows</code></pre>
 <hr />
 </div>
 <div id="filter" class="section level5">
 <h5>Filter</h5>
+<p>The <code>filter()</code> function uses the following logical operators to subset rows of the dataset:</p>
+<ul>
+<li><code>x &lt; y</code> x is less than y</li>
+<li><code>x &lt;= y</code> x is less than or equal to y</li>
+<li><code>x &gt; y</code> x is greater than y</li>
+<li><code>x &gt;= y</code> x is greater than or equal to y</li>
+<li><code>x == y</code> x is equal to y</li>
+<li><code>x != y</code> x is not equal to y</li>
+<li><code>x %in% c(y, z)</code> TRUE if x is in the vector c(y,z)<br />
+</li>
+<li><code>|</code> OR operator, i.e. x &lt; y | x &gt; z</li>
+<li><code>&amp;</code> and operator, i.w. x != ‘NA’ &amp; x &lt; y</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#filter for red-eye flights</span>
+flights %&gt;%<span class="st"> </span><span class="kw">filter</span>(dep_time &lt;<span class="st"> </span><span class="dv">600</span>)</code></pre></div>
+<pre><code>## # A tibble: 8,730 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # ... with 8,720 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#filter flights by carrier (UA = United Airlines)</span>
+flights %&gt;%<span class="st"> </span><span class="kw">filter</span>(carrier ==<span class="st"> 'UA'</span>)</code></pre></div>
+<pre><code>## # A tibble: 58,665 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      554            558        -4      740
+##  4  2013     1     1      558            600        -2      924
+##  5  2013     1     1      558            600        -2      923
+##  6  2013     1     1      559            600        -1      854
+##  7  2013     1     1      607            607         0      858
+##  8  2013     1     1      611            600        11      945
+##  9  2013     1     1      623            627        -4      933
+## 10  2013     1     1      628            630        -2     1016
+## # ... with 58,655 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#filter flights out of JFK going to SFO and LAX</span>
+flights %&gt;%<span class="st"> </span><span class="kw">filter</span>(origin ==<span class="st"> 'JFK'</span> &amp;<span class="st"> </span>dest %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">'SFO'</span>, <span class="st">'LAX'</span>))</code></pre></div>
+<pre><code>## # A tibble: 19,466 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      558            600        -2      924
+##  2  2013     1     1      611            600        11      945
+##  3  2013     1     1      655            700        -5     1037
+##  4  2013     1     1      658            700        -2     1027
+##  5  2013     1     1      702            700         2     1058
+##  6  2013     1     1      729            730        -1     1049
+##  7  2013     1     1      734            737        -3     1047
+##  8  2013     1     1      743            730        13     1107
+##  9  2013     1     1      745            745         0     1135
+## 10  2013     1     1      803            800         3     1132
+## # ... with 19,456 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#filter flights that left late or arrived ahead of time</span>
+flights %&gt;%<span class="st"> </span><span class="kw">filter</span>(dep_delay &gt;<span class="st"> </span><span class="dv">0</span> |<span class="st"> </span>arr_delay &lt;<span class="st"> </span><span class="dv">0</span>)</code></pre></div>
+<pre><code>## # A tibble: 283,844 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      557            600        -3      709
+##  7  2013     1     1      557            600        -3      838
+##  8  2013     1     1      558            600        -2      849
+##  9  2013     1     1      558            600        -2      853
+## 10  2013     1     1      558            600        -2      923
+## # ... with 283,834 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <hr />
 </div>
 <div id="arrange" class="section level5">
 <h5>Arrange</h5>
+<p>Arrange can be used for either ascending order or descending order. The latter requires using the <code>desc()</code> function withing the call to <code>arrange()</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#filter by carrier: AA, origin: JFK, and month: June, arrange by flight distance</span>
+flights %&gt;%<span class="st"> </span><span class="kw">filter</span>(carrier ==<span class="st"> 'AA'</span> &amp;<span class="st"> </span>origin ==<span class="st"> 'JFK'</span> &amp;<span class="st"> </span>month ==<span class="st"> </span><span class="dv">6</span>) %&gt;%
+<span class="st">  </span><span class="kw">arrange</span>(dest)</code></pre></div>
+<pre><code>## # A tibble: 1,156 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     6     1     1709           1720       -11     2028
+##  2  2013     6     2     1717           1720        -3     2027
+##  3  2013     6     3     1721           1720         1     2105
+##  4  2013     6     4     1732           1720        12     2042
+##  5  2013     6     5     1718           1720        -2     2029
+##  6  2013     6     6     1842           1720        82     2156
+##  7  2013     6     7     1721           1720         1     2011
+##  8  2013     6     8     1722           1720         2     2004
+##  9  2013     6     9     1736           1720        16     2052
+## 10  2013     6    10     1716           1720        -4     2039
+## # ... with 1,146 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#arrange using the desc() function</span>
+flights %&gt;%<span class="st"> </span><span class="kw">filter</span>(origin !=<span class="st"> 'JFK'</span> &amp;<span class="st"> </span>month &gt;<span class="st"> </span><span class="dv">9</span>) %&gt;%
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(air_time))</code></pre></div>
+<pre><code>## # A tibble: 57,293 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013    11    12      936            930         6     1630
+##  2  2013    11     6      927            930        -3     1603
+##  3  2013    12     6      932            930         2     1608
+##  4  2013    12     5      927            930        -3     1546
+##  5  2013    12    10     1014            930        44     1732
+##  6  2013    11    21      939            930         9     1558
+##  7  2013    11     9      930            930         0     1549
+##  8  2013    11    20      923            930        -7     1552
+##  9  2013    11    10      928            930        -2     1539
+## 10  2013    11     7      923            930        -7     1546
+## # ... with 57,283 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <hr />
 </div>
 <div id="mutate" class="section level5">
 <h5>Mutate</h5>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#create a new column : date </span>
+flights %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">date =</span> <span class="kw">as.Date</span>(<span class="kw">paste</span>(year,month,day, <span class="dt">sep =</span> <span class="st">'-'</span>))) %&gt;%
+<span class="st">  </span><span class="kw">select</span>(<span class="dv">1</span>:<span class="dv">3</span>, date) %&gt;%<span class="st"> </span><span class="kw">distinct</span>()</code></pre></div>
+<pre><code>## # A tibble: 365 x 4
+##     year month   day       date
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;date&gt;
+##  1  2013     1     1 2013-01-01
+##  2  2013     1     2 2013-01-02
+##  3  2013     1     3 2013-01-03
+##  4  2013     1     4 2013-01-04
+##  5  2013     1     5 2013-01-05
+##  6  2013     1     6 2013-01-06
+##  7  2013     1     7 2013-01-07
+##  8  2013     1     8 2013-01-08
+##  9  2013     1     9 2013-01-09
+## 10  2013     1    10 2013-01-10
+## # ... with 355 more rows</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#convert airtime to hours</span>
+flights %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">air_time_hrs =</span> air_time /<span class="st"> </span><span class="dv">60</span>) %&gt;%<span class="st"> </span><span class="kw">select</span>(air_time, air_time_hrs)</code></pre></div>
+<pre><code>## # A tibble: 336,776 x 2
+##    air_time air_time_hrs
+##       &lt;dbl&gt;        &lt;dbl&gt;
+##  1      227    3.7833333
+##  2      227    3.7833333
+##  3      160    2.6666667
+##  4      183    3.0500000
+##  5      116    1.9333333
+##  6      150    2.5000000
+##  7      158    2.6333333
+##  8       53    0.8833333
+##  9      140    2.3333333
+## 10      138    2.3000000
+## # ... with 336,766 more rows</code></pre>
 <hr />
 </div>
 <div id="summarise" class="section level5">
 <h5>Summarise</h5>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#summarise the distance column of the flights dataset</span>
+flights %&gt;%<span class="st"> </span><span class="kw">summarise</span>(<span class="dt">avg_dist =</span> <span class="kw">mean</span>(distance),
+                      <span class="dt">longest_dist =</span> <span class="kw">max</span>(distance),
+                      <span class="dt">shortest_dist =</span> <span class="kw">min</span>(distance))</code></pre></div>
+<pre><code>## # A tibble: 1 x 3
+##   avg_dist longest_dist shortest_dist
+##      &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;
+## 1 1039.913         4983            17</code></pre>
 <hr />
 </div>
 </div>
+<div id="grouping" class="section level4">
+<h4>grouping</h4>
+<p>Another powerful feature of dplyr is grouping. We can define groups within datasets using the <code>group_by</code> statement. With these defined groups in place, we can then influence how the summarise function works on the dataset.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#find the most visited destination for each carrier, arrange from high to low by count.</span>
+flights %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(carrier, dest) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">count =</span> <span class="kw">n</span>()) %&gt;%
+<span class="st">  </span><span class="kw">filter</span>(count ==<span class="st"> </span><span class="kw">max</span>(count)) %&gt;%
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(count))</code></pre></div>
+<pre><code>## # A tibble: 16 x 3
+## # Groups:   carrier [16]
+##    carrier  dest count
+##      &lt;chr&gt; &lt;chr&gt; &lt;int&gt;
+##  1      DL   ATL 10571
+##  2      US   CLT  8632
+##  3      AA   DFW  7257
+##  4      UA   ORD  6984
+##  5      B6   FLL  6563
+##  6      MQ   RDU  4794
+##  7      WN   MDW  4113
+##  8      EV   IAD  4048
+##  9      VX   LAX  2580
+## 10      FL   ATL  2337
+## 11      9E   CVG  1559
+## 12      AS   SEA   714
+## 13      F9   DEN   685
+## 14      HA   HNL   342
+## 15      YV   IAD   311
+## 16      OO   CLE    24</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># monthly flight data</span>
+flights %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(month, carrier) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">total_flights =</span> <span class="kw">n</span>(),
+            <span class="dt">distinct_destinations =</span> <span class="kw">n_distinct</span>(dest),
+            <span class="dt">avg_dep_time =</span> <span class="kw">mean</span>(dep_time, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+            <span class="dt">longest_flight =</span> <span class="kw">max</span>(air_time,  <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</code></pre></div>
+<pre><code>## # A tibble: 185 x 6
+## # Groups:   month [?]
+##    month carrier total_flights distinct_destinations avg_dep_time
+##    &lt;int&gt;   &lt;chr&gt;         &lt;int&gt;                 &lt;int&gt;        &lt;dbl&gt;
+##  1     1      9E          1573                    30    1503.6442
+##  2     1      AA          2794                    17    1300.5349
+##  3     1      AS            62                     1    1281.8710
+##  4     1      B6          4427                    38    1366.9000
+##  5     1      DL          3690                    34    1345.7763
+##  6     1      EV          4171                    51    1407.8007
+##  7     1      F9            59                     1    1275.7627
+##  8     1      FL           328                     3    1309.1883
+##  9     1      HA            31                     1     887.2903
+## 10     1      MQ          2271                    17    1402.4080
+## # ... with 175 more rows, and 1 more variables: longest_flight &lt;dbl&gt;</code></pre>
+</div>
 <div id="layering" class="section level4">
 <h4>layering</h4>
-<p>Layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. Be careful of the consequences as they may not be transparent at first.</p>
+<p>Layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. The order of your grouping matters so be careful as the consequences of your order may not be transparent at first.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glimpse</span>(airquality)</code></pre></div>
 <pre><code>## Observations: 153
 ## Variables: 6
@@ -922,7 +1161,7 @@ n &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</sp
 rnorm</code></pre></div>
 <pre><code>## function (n, mean = 0, sd = 1) 
 ## .Call(C_rnorm, n, mean, sd)
-## &lt;bytecode: 0x00000000077e0388&gt;
+## &lt;bytecode: 0x000000000be1a650&gt;
 ## &lt;environment: namespace:stats&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># map(.x, .f)</span>
 <span class="kw">map</span>(<span class="dt">.x =</span> n, <span class="dt">.f =</span> rnorm)</code></pre></div>
