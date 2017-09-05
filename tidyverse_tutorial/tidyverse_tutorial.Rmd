@@ -552,25 +552,27 @@ flights %>%
 Layering is an important concept to know when it comes to grouping in dplyr. When you summarise data, a grouped layer gets shed each time you call the summarise function. The order of your grouping matters so be careful as the consequences of your order may not be transparent at first.
 
 ```{r layering example}
-glimpse(airquality)
+#compute average_air_time per day of each month
+average_airtime_per_day <- flights %>%
+  group_by(month, day) %>%
+  summarise(avg_air_time = mean(air_time, na.rm = TRUE))
 
-mean_temp_by_day <- airquality %>%
-  group_by(Month, Day) %>%
-  summarise(temp = mean(Temp))
+#display results
+average_airtime_per_day
 
-mean_temp_by_day
+#compute average air_time per month. The 'day' group gets shed from this layer
+average_airtime_per_month <- average_airtime_per_day %>%
+  summarise(avg_air_time = mean(avg_air_time))
 
-mean_temp_by_month <- mean_temp_by_day %>%
-summarise(temp = mean(temp))
+#display results
+average_airtime_per_month
 
-mean_temp_by_month
+#compute the total average air_time. The 'month' group gets shed leaving a single global mean value for the entire dataset
+average_air_time_overall <- average_airtime_per_month %>%
+  summarise(avg_air_time = mean(avg_air_time))
 
-global.mean <- mean_temp_by_month %>%
-  summarise(temp = mean(temp))
-
-global.mean
-
-mean(airquality$Temp)
+#display results
+average_air_time_overall
 ```
 
 ---
