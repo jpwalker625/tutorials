@@ -1,0 +1,45 @@
+---
+title: "modeling techniques"
+author: "Joseph Walker"
+date: "September 21, 2017"
+output: html_document
+---
+This document provides modeling examples and techniques.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+#load required packages
+library(tidyverse)
+library(modelr)
+```
+
+In the following example, the `diamonds` dataset from the `ggplot2` package is used.
+
+```{r}
+#group by cut and nest the rest of the data
+by_cut <- diamonds %>%  
+  group_by(cut) %>% 
+  nest()
+
+by_cut
+
+#create model function
+model <- function(data){
+  lm(price ~ ., data = data)
+}
+
+#apply model for each class of cut
+by_cut <- by_cut %>%
+  mutate(model = map(data, model))
+
+by_cut
+
+by_cut <- by_cut %>%
+  mutate(predictions = map2(data, model, add_predictions))
+
+by_cut %>% unnest(predictions) %>% glimpse()
+
+by_cut$model %>% map(broom::glance)
+```
+
