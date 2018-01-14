@@ -1,6 +1,8 @@
 ---
 title: "Joe's Useful Functions"
-output: html_notebook
+output:
+  html_document: default
+  html_notebook: default
 ---
 
 # Intro
@@ -115,3 +117,11 @@ ggplot(aes(x = Time, y = weight, color = Diet))+
 
 ```
 
+# Tidy Functions
+
+### recode
+Recode observations that are not factors using the `tidyr recode()` function
+
+
+
+# Wrangling Functions

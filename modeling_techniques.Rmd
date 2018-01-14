@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 #load required packages
 library(tidyverse)
 library(modelr)
+library(broom)
 ```
 
 In the following example, the `diamonds` dataset from the `ggplot2` package is used.
@@ -41,5 +42,32 @@ by_cut <- by_cut %>%
 by_cut %>% unnest(predictions) %>% glimpse()
 
 by_cut$model %>% map(broom::glance)
+```
+
+Here is another example of how to apply a model to nested rows of a dataframe.
+
+```{r}
+#data refers to the data column of the newly nested mpg dataframe
+by_car <- mpg %>%
+  nest(-manufacturer) %>%
+mutate(model = map(data, ~lm(hwy ~ displ, .)),
+       tidied = map(model, tidy))
+#by tidying th model variable, we can convert the model list into a model dataframe.
+
+by_car
+
+#finally we can unnest the tidied variable to extract the model coefficients for each row, or car.
+
+by_car %>% unnest(tidied)
+```
+
+Another useful function is the p.adjust function which sets a stricter threshold on the p-values.
+
+```{r}
+by_car %>% 
+  unnest(tidied) %>%
+  filter(term == "displ") %>%#filter out the y-intercept rows
+  mutate(p.adjusted = p.adjust(p.value)) %>% #adjust the p-value with p.adjust
+  filter(p.adjusted < 0.05)
 ```
 
