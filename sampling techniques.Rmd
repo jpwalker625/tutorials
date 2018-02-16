@@ -1,0 +1,50 @@
+---
+title: "Sampling Methods"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+There are many ways to sample or split your data. The examples below will explore some of these methods using different functions and packages.
+
+The first method will you the `base` function `sample`
+```{r}
+set.seed(4352)
+samp <- sample(x = nrow(iris), size = floor(0.7*(nrow(iris))), replace = F)
+
+iris_train <- iris[samp, ]
+iris_test <- iris[-samp, ]
+
+
+```
+
+
+Randomly order the dataframe
+```{r}
+set.seed(123)
+
+rows <- sample(nrow(mtcars))
+
+cars <- mtcars[rows, ]
+
+split <- round(nrow(cars)* .8)
+
+cars_train <- cars[1:split, ]
+cars_test <- cars[split + 1: nrow(cars), ]
+```
+
+Using a random uniform distribution
+
+```{r}
+target <- round(.7* nrow(chickwts))
+
+gp <- runif(n = nrow(chickwts))
+
+chickwts_train <- chickwts[gp < .7, ]
+chickwts_test <- chickwts[gp > .7, ]
+
+
+nrow(chickwts) == nrow(chickwts_train) + nrow(chickwts_test)
+```
+
