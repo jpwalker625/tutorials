@@ -1,7 +1,7 @@
 library(shiny)
 library(tidyverse)
 library(DT)
-library(stringr)
+
 
 pokemon <- read_csv("pokemon.csv")
 
