@@ -125,3 +125,14 @@ Recode observations that are not factors using the `tidyr recode()` function
 
 
 # Wrangling Functions
+
+
+# Shiny
+
+### req()
+
+The function `req()` checks for truthiness. Ensures tha values are available before proceeding with a calculation or action. Super useful for excluding errors when clearing input in an app.
+
+### plot_brush & plot_hover
+
+Filtering of data points for selective table output.
