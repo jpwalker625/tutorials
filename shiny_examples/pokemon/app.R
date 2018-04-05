@@ -22,12 +22,20 @@ ui <- fluidPage(
    # Sidebar with a checkbox input
    sidebarLayout(
      sidebarPanel(
+       #y-axis selector
        selectInput(inputId = "y", label = "y-axis",
                    choices = choices, selectize = T, selected = "attack"),
+       #x-axis selector
        selectInput(inputId = "x", label = "x-axis", 
                    choices = choices, selectize = T, "total"),
+       #check box for faceting
        checkboxInput(inputId = 'faceted', label = "Facet by Legendary Status?", value = F),
-       numericInput(inputId = "n", label = "Sample Size", value = 30, min = 1, max = 800)
+       # enter value for sample size
+       numericInput(inputId = "n", label = "Sample Size", value = 30, min = 1, max = 800),
+       # Enter text for plot title
+       textInput(inputId = "plot_title", 
+                 label = "Plot title", 
+                 placeholder = "Enter text for plot title")
      ),
      # Output:
      mainPanel(
@@ -44,6 +52,10 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
    
+  #convert plot title to TitleCase
+  pretty_plot_title <- reactive({
+    tools::toTitleCase(paste(input$plot_title, "is a reactive plot title. This plot contains:", input$n, "data points", sep = " "))
+  })
   # Create scatterplot object the plotOutput function is expecting
   output$scatterplot <- renderPlot({
     req(input$n) # gets rid of error if the numeric input is cleared
@@ -51,12 +63,14 @@ server <- function(input, output) {
       pokemon %>% sample_n(input$n) %>%
     ggplot(aes_string(x = input$x, y = input$y, color = "type2")) +
       geom_point() +
-        facet_wrap(~legendary)
+        facet_wrap(~legendary) +
+        labs(title = pretty_plot_title())
     }
     else if(input$faceted == F){
       pokemon %>% sample_n(input$n) %>%
       ggplot(aes_string(x = input$x, y = input$y, color = "legendary")) +
-        geom_point() 
+        geom_point() +
+        labs(title = pretty_plot_title())
     }
   })
   
