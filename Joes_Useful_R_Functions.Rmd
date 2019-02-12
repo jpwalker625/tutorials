@@ -13,6 +13,19 @@ This notebook serves as a compilation of miscellaneous functions I have found al
 
 ## Aesthetics
 
+### Color Palettes
+
+* scale_fill_grey 
+*scale_colour_grey 
+
+For scientific journal color palettes: `ggsci` package includes: 
+
+* scale_color_npg()
+* scale_color_aaas() 
+* scale_color_lancet() 
+* scale_color_jco()
+* scale_color_tron()
+
 ### Color Ramp Palette
 
 You can create a custom color ramp palette function using the `colorramppalette` function stored as an object.
